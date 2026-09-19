@@ -1,0 +1,13 @@
+{
+	"appId": "com.nigeriaflavours.app",
+	"appName": "Nigeria Flavours",
+	"webDir": "www",
+	"bundledWebRuntime": false,
+	"android": {
+		"allowMixedContent": false
+	},
+	"ios": {
+		"contentInset": "automatic"
+	},
+	"packageClassList": []
+}
