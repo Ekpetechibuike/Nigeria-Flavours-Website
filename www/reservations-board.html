@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reservations Board — Nigeria Flavors</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#d96c29" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="pwa.js" defer></script>
+  <script src="auth.js"></script>
+  <script>
+    (function() {
+      if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html" aria-label="Nigeria Flavors ">
+        <img src="/favicon.png" alt="Nigeria Flavors logo" />
+      </a>
+      <span id="profileNavInfo" class="profile-nav-info hidden">
+        <img id="profileAvatarNav" src="assets/images/default-avatar.jpg" alt="Profile" class="profile-avatar-nav-nav">
+        <span id="profileUsername" class="profile-username hidden"></span>
+      </span>
+      <button id="navToggle" class="nav-toggle" aria-label="Open navigation" aria-controls="nav" aria-expanded="false">☰</button>
+      <nav id="nav" class="nav" data-open="false">
+        <a href="index.html">Home</a>
+        <a href="profile.html" id="profileNavLink" class="hidden">Profile</a>
+        <a href="reservations-board.html">Reservations</a>
+        <a href="login.html" id="loginNavLink">Login</a>
+        <button id="logoutNavBtn" class="nav-logout hidden" type="button" onclick="logout()">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="reservationsBoard">
+    <section class="board-header">
+      <h1>Reservation Board</h1>
+      <p>See all reservation orders placed on the site, including selected menu items and guest details.</p>
+    </section>
+
+    <section class="board-summary">
+      <div class="stat-card">
+        <strong id="totalReservations">0</strong>
+        <span>Total Reservations</span>
+      </div>
+      <div class="stat-card">
+        <strong id="totalOrders">0</strong>
+        <span>Total Food Orders</span>
+      </div>
+    </section>
+
+    <section class="board-section">
+      <div class="section-heading">
+        <h2>Reservation Orders</h2>
+        <p>All reservations submitted from the contact/reservation form.</p>
+      </div>
+      <div id="reservationsBoardEmpty" class="board-empty hidden">No reservations have been made yet.</div>
+      <div class="table-scroll">
+        <table class="board-table" id="reservationsBoardList">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Date & Time</th>
+              <th>Guests</th>
+              <th>Foods</th>
+              <th>Total</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="reservationsBoardRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="board-section">
+      <div class="section-heading">
+        <h2>Food Orders</h2>
+        <p>Food orders placed through the ordering modal on the menu page.</p>
+      </div>
+      <div id="ordersBoardEmpty" class="board-empty hidden">No food orders have been placed yet.</div>
+      <div class="table-scroll">
+        <table class="board-table" id="ordersBoardList">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Foods</th>
+              <th>Quantities</th>
+              <th>Address</th>
+              <th>Total</th>
+              <th>Placed</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBoardRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="app-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

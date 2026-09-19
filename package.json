@@ -1,0 +1,26 @@
+{
+  "name": "nigeria-flavours-website",
+  "version": "1.0.0",
+  "description": "Nigeria Flavors Restaurant Website",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "cd server && npm start",
+    "dev": "cd server && npm run dev",
+    "board": "cd server && npm run board",
+    "mobile:prepare": "node scripts/prepare-capacitor.js",
+    "cap:sync": "npm run mobile:prepare && npx cap sync",
+    "android": "npm run cap:sync && npx cap open android",
+    "ios": "npm run cap:sync && npx cap open ios"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2"
+  }
+}
