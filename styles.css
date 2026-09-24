@@ -22,10 +22,10 @@
 body{font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;margin:0;color:var(--text);background:linear-gradient(180deg,#0b0f14 0%,#101922 35%,#0e1419 100%);-webkit-font-smoothing:antialiased}
 .container{max-width:1000px;margin:0 auto;padding:1rem}
 .site-header{background:rgba(17,24,31,.9);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.site-header .container{display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem;justify-content:space-between;position:relative}
+.site-header .container{display:flex;flex-wrap:nowrap;align-items:center;gap:0.75rem;justify-content:flex-start;position:relative}
 .logo{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;line-height:0}
 .logo img{display:block;height:72px;width:auto;max-width:220px;object-fit:contain}
-.header-actions{display:flex;align-items:center;gap:.75rem;margin-left:auto}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:.75rem;margin-left:auto}
 .nav{display:none;flex-direction:column;gap:0.5rem;align-items:stretch;position:absolute;top:100%;left:0;right:0;background:#111827;border-bottom:1px solid var(--border);padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:50}
 .nav[data-open="true"]{display:flex}
 .nav a{color:var(--text);text-decoration:none;padding:.75rem 1rem;border-radius:10px;background:rgba(255,255,255,.02);transition:background-color 0.2s}
@@ -169,7 +169,7 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   background: rgba(217,108,41,0.1);
   border: 1px solid rgba(217,108,41,0.18);
   border-radius: 999px;
-  margin-left: auto;
+  margin-left: 0;
   font-weight: 600;
   color: var(--text);
 }
