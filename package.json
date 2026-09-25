@@ -4,8 +4,8 @@
   "description": "Nigeria Flavors Restaurant Website",
   "main": "server/server.js",
   "scripts": {
-    "start": "cd server && npm start",
-    "dev": "cd server && npm run dev",
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
     "board": "cd server && npm run board",
     "mobile:prepare": "node scripts/prepare-capacitor.js",
     "cap:sync": "npm run mobile:prepare && npx cap sync",
