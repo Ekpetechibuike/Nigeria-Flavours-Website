@@ -32,11 +32,12 @@ body{font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;margin:0;color:var(--
 .nav button.nav-logout{padding:.75rem 1rem;border:none;border-radius:10px;background:#ef4444;color:#fff;cursor:pointer}
 .nav a:hover,.nav button.nav-logout:hover{background:rgba(217,108,41,.12)}
 .nav-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:1.25rem;cursor:pointer}
-.install-app{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:#fff;border:none;border-radius:10px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-soft)}
+.install-app{background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:#fff;border:none;border-radius:10px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-soft);display:inline-flex;align-items:center;justify-content:center}
 .install-app.hidden{display:none}
 .hero{padding:2rem 0;background:linear-gradient(180deg,rgba(200,90,23,.05),transparent)}
 .hero h1{margin:0;font-size:1.85rem;line-height:1.2}
 .hero p{max-width:100%;margin:0.75rem 0 1rem}
+.hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
 .lead{color:var(--muted)}
 .btn{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:#fff;padding:.75rem 1.1rem;border-radius:10px;text-decoration:none;font-weight:600;box-shadow:var(--shadow-soft);transition:transform .2s ease, box-shadow .2s ease}
 .btn:hover{transform:translateY(-1px);box-shadow:0 15px 30px rgba(217,108,41,.22)}
