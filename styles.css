@@ -1,236 +1,562 @@
-:root{
-  --accent:#d96c29;
-  --accent-strong:#b8561e;
-  --accent-soft:#f8d2a3;
-  --accent-gold:#f5b041;
-  --primary:#111827;
-  --primary-deep:#0b0f14;
-  --muted:#a8a29e;
-  --muted-light:#d6d3d1;
-  --bg:#0d1117;
-  --bg-strong:#161d24;
-  --text:#f5efe7;
-  --card-bg:#171d24;
-  --panel:#1f2a30;
-  --border:#2a343d;
-  --success:#22c55e;
-  --error:#ef4444;
-  --shadow:0 18px 45px rgba(0,0,0,0.35);
-  --shadow-soft:0 18px 40px rgba(217,108,41,0.18);
-}
-*{box-sizing:border-box}
-body{font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;margin:0;color:var(--text);background:linear-gradient(180deg,#0b0f14 0%,#101922 35%,#0e1419 100%);-webkit-font-smoothing:antialiased}
-.container{max-width:1000px;margin:0 auto;padding:1rem}
-.site-header{background:rgba(17,24,31,.9);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.site-header .container{display:flex;flex-wrap:nowrap;align-items:center;gap:0.75rem;justify-content:flex-start;position:relative}
-.logo{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;line-height:0}
-.logo img{display:block;height:72px;width:auto;max-width:220px;object-fit:contain}
-.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:.75rem;margin-left:auto}
-.nav{display:none;flex-direction:column;gap:0.5rem;align-items:stretch;position:absolute;top:100%;left:0;right:0;background:#111827;border-bottom:1px solid var(--border);padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:50}
-.nav[data-open="true"]{display:flex}
-.nav a{color:var(--text);text-decoration:none;padding:.75rem 1rem;border-radius:10px;background:rgba(255,255,255,.02);transition:background-color 0.2s}
-.nav button.nav-logout{padding:.75rem 1rem;border:none;border-radius:10px;background:#ef4444;color:#fff;cursor:pointer}
-.nav a:hover,.nav button.nav-logout:hover{background:rgba(217,108,41,.12)}
-.nav-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:1.25rem;cursor:pointer}
-.install-app{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:#fff;border:none;border-radius:10px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-soft)}
-.install-app.hidden{display:none}
-.hero{padding:2rem 0;background:linear-gradient(180deg,rgba(200,90,23,.05),transparent)}
-.hero h1{margin:0;font-size:1.85rem;line-height:1.2}
-.hero p{max-width:100%;margin:0.75rem 0 1rem}
-.lead{color:var(--muted)}
-.btn{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:#fff;padding:.75rem 1.1rem;border-radius:10px;text-decoration:none;font-weight:600;box-shadow:var(--shadow-soft);transition:transform .2s ease, box-shadow .2s ease}
-.btn:hover{transform:translateY(-1px);box-shadow:0 15px 30px rgba(217,108,41,.22)}
-.menu-section{padding:1.5rem 0}
-.filters{display:flex;flex-direction:column;gap:.75rem;margin:1rem 0}
-.filter{background:#fff;border:1px solid var(--border);padding:.75rem 1rem;border-radius:12px;cursor:pointer;text-align:left}
-.filter.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
-.card{background:linear-gradient(180deg,#1b2229,#171d24);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease, box-shadow .2s ease}
-.card:hover{transform:translateY(-4px);box-shadow:0 18px 35px rgba(0,0,0,.25)}
-.card img{display:block;width:100%;height:200px;object-fit:cover}
-.card-body{padding:1rem}
-.card h3{margin:.25rem 0;display:block}
-.card .price{font-weight:700;color:var(--accent-strong);margin-top:.75rem}
-.card .dish-desc{color:var(--muted);margin:0.75rem 0}
-.culture{padding:2rem 0}
-.contact-wrapper{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:stretch}
-.reservation-form{background:linear-gradient(180deg,#1b232a,#171d24);padding:1rem;border-radius:12px;border:1px solid var(--border)}
-.form-group{display:flex;flex-direction:column;margin-bottom:1rem}
-.form-row{display:flex;flex-direction:column;gap:1rem}
-.form-row .form-group{flex:none}
-.reservation-form input,.reservation-form textarea{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:1rem;transition:border-color 0.2s}
-.reservation-form input:focus,.reservation-form textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,90,23,.1)}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nigeria Flavors — Cultural Restaurant</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#d96c29" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="pwa.js" defer></script>
+  <script src="auth.js"></script>
+  <script>
+    // Early auth check - redirect to login if not authenticated
+    (function() {
+      if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
 
-/* Food selection styles */
-.food-grid label{cursor:pointer}
-.food-checkbox input[type="checkbox"]{margin-right:0.5rem;width:1.2em;height:1.2em;accent-color:var(--accent)}
-.food-grid{display:grid;gap:0.75rem;max-height:200px;overflow-y:auto;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
-.food-checkbox{display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;cursor:pointer}
-#selectedFoodsCount{color:var(--muted);font-style:italic}
-fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:0}
-@media (max-width:600px){
-  .container{padding:.75rem}
-  .logo img{height:52px;max-width:160px}
-  .cards{grid-template-columns:1fr}
-  .card img{height:180px}
-  .food-grid{padding:0.75rem}
-  .food-checkbox{font-size:0.875rem}
-}
+<a class="logo" href="index.html" aria-label="Nigeria Flavors ">
+    <img src="./favicon.png" alt="Nigeria Flavors logo" />
+</a>
+<div class="header-actions">
+  <span id="profileNavInfo" class="profile-nav-info hidden">
+    <img id="profileAvatarNav" src="assets/images/default-avatar.jpg" alt="Profile" class="profile-avatar-nav-nav">
+    <span id="profileUsername" class="profile-username hidden"></span>
+  </span>
+  <button id="navToggle" class="nav-toggle" aria-label="Open navigation" aria-controls="nav" aria-expanded="false">☰</button>
+</div>
+      <nav id="nav" class="nav" data-open="false">
+        <a href="index.html">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#culture">Culture</a>
+        <a href="#contact">Contact</a>
+        <a href="login.html" id="loginNavLink">Login</a>
+        <a href="profile.html" id="profileNavLink" class="hidden">Profile</a>
+        <button id="logoutNavBtn" class="nav-logout hidden" type="button" onclick="logout()">Logout</button>
+      </nav>
+    </div>
+</header>
 
-@media (min-width:601px) and (max-width:900px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Authentic Nigerian Dishes</h1>
+        <p>Explore the flavors and cultural foods of the three major tribes: Hausa, Igbo, and Yoruba.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#menu">See Menu</a>
+          <button id="installAppBtn" class="install-app hidden" type="button" aria-label="Install app">Install App</button>
+        </div>
+      </div>
+    </section>
 
-#formStatus{margin-top:.5rem;color:var(--muted)}
-.tribes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.site-footer{border-top:1px solid var(--border);padding:.75rem 0;margin-top:1.25rem;text-align:center;color:var(--muted);background:#111827}
-.contact{padding:1.5rem 0}
-.board-header{padding:2rem 0 1.25rem}
-.board-header h1{margin:0 0 .5rem;font-size:2.25rem;line-height:1.1;color:var(--text)}
-.board-header p{color:var(--muted);max-width:42rem;line-height:1.6}
-.board-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:#000;border:1px solid #000;border-radius:18px;padding:1.5rem;box-shadow:0 12px 24px rgba(0,0,0,.18);text-align:center}
-.stat-card strong{display:block;font-size:2.1rem;color:#fff;margin-bottom:.5rem}
-.stat-card span{color:#f3f4f6;font-weight:600}
-.section-heading{margin-bottom:1rem}
-.section-heading h2{margin:0 0 .35rem;font-size:1.45rem}
-.section-heading p{margin:0;color:var(--muted)}
-.board-section{background:#000;border:1px solid #000;border-radius:18px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 12px 30px rgba(0,0,0,.12)}
-.board-table{width:100%;border-collapse:collapse;min-width:900px}
-.board-table th,.board-table td{padding:.9rem 1rem;border:1px solid rgba(255,255,255,0.08);text-align:left;vertical-align:top}
-.board-table th{background:#111827;color:#fff;font-size:.9rem;text-transform:uppercase;letter-spacing:.04em}
-.table-scroll{overflow-x:auto}
-.board-empty{padding:1rem;border:1px dashed rgba(255,255,255,0.2);border-radius:12px;color:#fff;background:#000}
-.hidden{display:none}
-@media (max-width:720px){
-  .board-table th,.board-table td{padding:.75rem}
-  .board-header h1{font-size:1.8rem}
-}
-@media (min-width:801px){
-  .site-header .container{position:relative}
-  .nav{left:auto;right:1rem;width:min(260px, calc(100% - 2rem))}
-}
-@media (max-width:800px){
-  .site-header .container{justify-content:flex-start}
-  .nav a{width:100%;margin-bottom:0.5rem}
-  .nav button.nav-logout{width:100%;margin-bottom:0.5rem}
-}
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0f1419;--card-bg:#1a202c;--text:#f0f4f8;--muted:#cbd5e1;--muted-light:#94a3b8;--border:#2d3748;--panel:#162033}
-  .site-header,.site-footer{background:#1a202c;border-color:var(--border)}
-  .site-header{background:rgba(26,32,44,.96)}
-}
-/* Login Modal Styles */
-.login-modal{display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-.login-modal.hidden{display:none}
-.login-container{width:100%;max-width:400px;padding:1rem}
-.login-card{background:linear-gradient(180deg,#1b232a,#171d24);border:1px solid var(--border);border-radius:18px;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,.25);text-align:center}
-.login-card h2{margin:0 0 0.5rem 0;font-size:1.5rem;color:var(--accent)}
-.login-card p{margin:0 0 1.5rem 0;color:var(--muted)}
-#loginForm{display:flex;flex-direction:column;gap:1rem}
-#loginForm input{padding:0.75rem;border:1px solid var(--border);border-radius:8px;font-size:1rem;background:var(--bg);color:var(--text)}
-#loginForm input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,90,23,.1)}
-#loginForm .btn{border:none;cursor:pointer;font-size:1rem;font-weight:600}
-.login-hint{font-size:0.85rem;color:var(--muted);margin:1rem 0 0 0}
+    <section id="menu" class="container menu-section">
+      <h2>Our Menu</h2>
+      <p class="lead">Filter by region:</p>
+      <div class="filters">
+        <button class="filter active" data-group="all">All</button>
+        <button class="filter" data-group="hausa">Hausa (North)</button>
+        <button class="filter" data-group="igbo">Igbo (East)</button>
+        <button class="filter" data-group="yoruba">Yoruba (West)</button>
+      </div>
 
-/* Order Modal */
-.order-modal{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-.order-modal.hidden{display:none}
-.order-container{width:100%;min-height:100%;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
-.order-card{position:relative;width:100%;max-width:500px;background:linear-gradient(180deg,#1b232a,#171d24);border:1px solid var(--border);border-radius:18px;padding:1.5rem 1rem;box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto}
-.order-card h2{margin:0 0 .5rem;font-size:1.4rem;color:var(--accent);text-align:center}
-.order-items{display:flex;flex-direction:column;gap:.75rem;margin:1rem 0}
-.order-item-row{display:grid;grid-template-columns:minmax(0,1fr) 5rem auto;gap:.5rem;align-items:center}
-.order-item-row select,.order-item-row input{width:100%;padding:.65rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
-.order-item-row select:focus,.order-item-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,90,23,.1)}
-.order-add-item{border:1px solid var(--accent);background:transparent;box-shadow:none;font-size:.9rem;margin-bottom:1rem}
-.order-add-item:hover{background:rgba(217,108,41,.12);box-shadow:none}
-.order-remove-item{border:0;background:transparent;color:#fca5a5;cursor:pointer;font:inherit;font-size:.8rem;padding:.35rem}
-.order-remove-item:hover{color:#fff}
-#orderDish{font-weight:600;font-size:1.2rem;color:var(--accent)}
-#orderPrice{font-size:1.4rem;font-weight:700;color:var(--accent);margin:1rem 0;text-align:center}
-#orderForm{display:flex;flex-direction:column;gap:1rem}
-#orderForm input{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:1rem;background:var(--bg);color:var(--text)}
-#orderForm input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,90,23,.1)}
-#orderForm .form-row{gap:1rem}
-#orderForm .btn{width:100%;border:none;cursor:pointer;font-size:1.1rem;font-weight:600;padding:1rem;background:var(--accent);color:#fff;border-radius:8px}
-#orderStatus{margin-top:1rem;font-weight:500;text-align:center}
-.price{cursor:pointer;padding:.25rem .5rem;border-radius:6px;transition:all .2s;display:inline-block}
-.price:hover{background:rgba(200,90,23,.08);transform:translateY(-1px)}
-.order-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer}
+      <div class="cards" id="cards">
+        <!-- Hausa -->
+        <article class="card" data-group="hausa">
+          <img src="assets/images/download.jpeg" alt="Tuwo Shinkafa">
+          <div class="card-body">
+            <h3>Tuwo Shinkafa</h3>
+            <p class="dish-desc">Soft, smooth rice dumplings served with savory soups such as Miyan Kuka (baobab leaf) or Miyan Taushe (pumpkin soup). A Hausa staple.</p>
+<p class="price" data-dish="Tuwo Shinkafa" onclick="openOrderModal('Tuwo Shinkafa', 2500)">₦2,500</p>
+          </div>
+        </article>
 
 
-.profile-nav-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  background: rgba(217,108,41,0.1);
-  border: 1px solid rgba(217,108,41,0.18);
-  border-radius: 999px;
-  margin-left: 0;
-  font-weight: 600;
-  color: var(--text);
-}
-.site-header .container > .profile-nav-info {
-  margin-left: auto;
-}
+        <article class="card" data-group="hausa">
+          <img src="assets/images/download01.jpeg" alt="Suya">
+          <div class="card-body">
+            <h3>Suya</h3>
+            <p class="dish-desc">Spiced grilled skewered meat with aromatic peanut rub. A street-food favorite with deep Hausa roots across Northern Nigeria.</p>
+<p class="price" data-dish="Suya" onclick="openOrderModal('Suya', 3000)">₦3,000</p>
+          </div>
+        </article>
 
-.profile-avatar-nav-nav {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  background: #f5efe7;
-  border: 2px solid rgba(255,255,255,0.8);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-}
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Awara hausa.jpeg" alt="Awara">
+          <div class="card-body">
+            <h3>Awara</h3>
+            <p class="dish-desc">Seasoned fried bean curd served with peppers, onions, and a savory Hausa spice blend.</p>
+            <p class="price" data-dish="Awara" onclick="openOrderModal('Awara', 2200)">₦2,200</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Dambu Nama hausa.jpeg" alt="Dambu Nama">
+          <div class="card-body">
+            <h3>Dambu Nama</h3>
+            <p class="dish-desc">Tender shredded beef steamed with onions and Northern spices, then lightly toasted.</p>
+            <p class="price" data-dish="Dambu Nama" onclick="openOrderModal('Dambu Nama', 2500)">₦2,500</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Dan Wake hausa.jpeg" alt="Dan Wake">
+          <div class="card-body">
+            <h3>Dan Wake</h3>
+            <p class="dish-desc">Soft bean-flour dumplings topped with pepper, onion, and a drizzle of oil.</p>
+            <p class="price" data-dish="Dan Wake" onclick="openOrderModal('Dan Wake', 1800)">₦1,800</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Fura Da Nono hausa.jpeg" alt="Fura Da Nono">
+          <div class="card-body">
+            <h3>Fura Da Nono</h3>
+            <p class="dish-desc">Crumbled millet balls blended into cool, lightly spiced fermented milk.</p>
+            <p class="price" data-dish="Fura Da Nono" onclick="openOrderModal('Fura Da Nono', 2000)">₦2,000</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Kilishi hausa.jpeg" alt="Kilishi">
+          <div class="card-body">
+            <h3>Kilishi</h3>
+            <p class="dish-desc">Thin, sun-dried beef coated in a rich pepper and groundnut spice paste.</p>
+            <p class="price" data-dish="Kilishi" onclick="openOrderModal('Kilishi', 3000)">₦3,000</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Kuli-Kuli hausa.jpeg" alt="Kuli-Kuli">
+          <div class="card-body">
+            <h3>Kuli-Kuli</h3>
+            <p class="dish-desc">Crunchy fried groundnut cakes seasoned with traditional Northern spices.</p>
+            <p class="price" data-dish="Kuli-Kuli" onclick="openOrderModal('Kuli-Kuli', 1500)">₦1,500</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Kunu hausa.jpeg" alt="Kunu">
+          <div class="card-body">
+            <h3>Kunu</h3>
+            <p class="dish-desc">Refreshing spiced millet drink with a smooth, creamy finish.</p>
+            <p class="price" data-dish="Kunu" onclick="openOrderModal('Kunu', 1000)">₦1,000</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Masa Hausa.jpeg" alt="Masa">
+          <div class="card-body">
+            <h3>Masa</h3>
+            <p class="dish-desc">Soft, lightly sweet fermented rice cakes with a golden griddled edge.</p>
+            <p class="price" data-dish="Masa" onclick="openOrderModal('Masa', 2000)">₦2,000</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/miyan kuka hausa.jpeg" alt="Miyan Kuka">
+          <div class="card-body">
+            <h3>Miyan Kuka</h3>
+            <p class="dish-desc">Silky baobab-leaf soup simmered with meat, peppers, and Northern seasonings.</p>
+            <p class="price" data-dish="Miyan Kuka" onclick="openOrderModal('Miyan Kuka', 2800)">₦2,800</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Miyan Taushe hausa.jpeg" alt="Miyan Taushe">
+          <div class="card-body">
+            <h3>Miyan Taushe</h3>
+            <p class="dish-desc">Creamy pumpkin soup enriched with groundnuts, greens, and tender meat.</p>
+            <p class="price" data-dish="Miyan Taushe" onclick="openOrderModal('Miyan Taushe', 2800)">₦2,800</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Miyan Zogale hausa.jpeg" alt="Miyan Zogale">
+          <div class="card-body">
+            <h3>Miyan Zogale</h3>
+            <p class="dish-desc">Nutritious moringa-leaf soup cooked with tomatoes, peppers, and savory spices.</p>
+            <p class="price" data-dish="Miyan Zogale" onclick="openOrderModal('Miyan Zogale', 2800)">₦2,800</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Tuwo dawa hausa.jpeg" alt="Tuwo Dawa">
+          <div class="card-body">
+            <h3>Tuwo Dawa</h3>
+            <p class="dish-desc">Smooth sorghum swallow served with a rich Northern soup.</p>
+            <p class="price" data-dish="Tuwo Dawa" onclick="openOrderModal('Tuwo Dawa', 2500)">₦2,500</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Tuwo massara hausa.jpeg" alt="Tuwo Massara">
+          <div class="card-body">
+            <h3>Tuwo Massara</h3>
+            <p class="dish-desc">Soft maize swallow paired with hearty Hausa soups and stews.</p>
+            <p class="price" data-dish="Tuwo Massara" onclick="openOrderModal('Tuwo Massara', 2500)">₦2,500</p>
+          </div>
+        </article>
+        <article class="card" data-group="hausa">
+          <img src="assets/images/Zobo hausa.jpeg" alt="Zobo">
+          <div class="card-body">
+            <h3>Zobo</h3>
+            <p class="dish-desc">Chilled hibiscus drink infused with ginger, citrus, and warming spices.</p>
+            <p class="price" data-dish="Zobo" onclick="openOrderModal('Zobo', 1000)">₦1,000</p>
+          </div>
+        </article>
 
-.profile-username {
-  display: none !important;
-}
 
-.nav-logout {
-  background: #dc2626 !important;
-  color: white !important;
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  margin-top: 0.25rem;
-}
-
-.nav-logout:hover {
-  background: #b91c1c !important;
-}
-
-@media (max-width: 600px) {
-  .profile-nav-info {
-    margin-left: auto;
-    flex-direction: row;
-    text-align: center;
-    gap: 0.35rem;
-  }
-}
-
-@media (min-width:600px){
-  .order-container{padding:1rem;max-width:450px;height:auto;margin:auto;top:50%;transform:translateY(-50%)}
-  .order-card{position:static;max-height:none;border-radius:12px;padding:2rem}
-  .order-close{top:.5rem;right:1rem}
-}
-@media (max-width:500px){
-  .order-container{padding-bottom:env(safe-area-inset-bottom,1.5rem)}
-  .order-card{padding:1.5rem 1rem;border-radius:16px 16px 0 0}
-}
+        <!-- Igbo -->
+        <article class="card" data-group="igbo">
+          <img src="assets/images/download03.jpeg" alt="Ofe Nsala">
+          <div class="card-body">
+            <h3>Ofe Nsala (White Soup)</h3>
+            <p class="dish-desc">A light, creamy soup made with palm oil, catfish or chicken, thickened with yam. Delicate and aromatic, Igbo favorite.</p>
+            <p class="price" data-dish="Ofe Nsala (White Soup)" onclick="openOrderModal('Ofe Nsala (White Soup)', 2800)">₦2,800</p>
+          </div>
+        </article>
 
 
+        <article class="card" data-group="igbo">
+          <img src="assets/images/download04.jpeg" alt="Abacha">
+          <div class="card-body">
+            <h3>Abacha & Ugba</h3>
+            <p class="dish-desc">Popular Igbo salad made from shredded cassava and fermented locust beans, served with palm oil, peppers, and onions.</p>
+            <p class="price" data-dish="Abacha & Ugba" onclick="openOrderModal('Abacha & Ugba', 2200)">₦2,200</p>
+          </div>
+        </article>
 
 
+        <article class="card" data-group="igbo">
+          <img src="assets/images/jollof rice and plantain igbo.jpeg" alt="Jollof Rice and Plantain">
+          <div class="card-body">
+            <h3>Jollof Rice & Plantain</h3>
+            <p class="dish-desc">Fragrant tomato jollof rice served with sweet fried plantain and a choice of savory chicken or meat.</p>
+            <p class="price" data-dish="Jollof Rice & Plantain" onclick="openOrderModal('Jollof Rice & Plantain', 2800)">₦2,800</p>
+          </div>
+        </article>
 
 
+        <article class="card" data-group="igbo">
+          <img src="assets/images/Okro soup igbo.jpeg" alt="Okro Soup with Fufu">
+          <div class="card-body">
+            <h3>Okro Soup with Fufu</h3>
+            <p class="dish-desc">Silky okro soup cooked with leafy greens, peppers, and tender meat or fish, served with soft fufu.</p>
+            <p class="price" data-dish="Okro Soup with Fufu" onclick="openOrderModal('Okro Soup with Fufu', 2800)">₦2,800</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/ofe egusi igbo.jpeg" alt="Egusi Soup with Fufu">
+          <div class="card-body">
+            <h3>Egusi Soup with Fufu</h3>
+            <p class="dish-desc">Rich melon-seed soup simmered with greens, palm oil, and assorted meat or fish, paired with fufu.</p>
+            <p class="price" data-dish="Egusi Soup with Fufu" onclick="openOrderModal('Egusi Soup with Fufu', 2800)">₦2,800</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/Rice and stew Igbo.jpeg" alt="Rice and Stew">
+          <div class="card-body">
+            <h3>Rice & Stew</h3>
+            <p class="dish-desc">Steamed rice served with a deeply seasoned pepper and tomato stew, finished with tender meat.</p>
+            <p class="price" data-dish="Rice & Stew" onclick="openOrderModal('Rice & Stew', 2800)">₦2,800</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/nkwobi igbo.jpeg" alt="Nkwobi">
+          <div class="card-body">
+            <h3>Nkwobi</h3>
+            <p class="dish-desc">Tender cow foot in a spicy, glossy palm-oil sauce with utazi leaves and traditional Igbo seasoning.</p>
+            <p class="price" data-dish="Nkwobi" onclick="openOrderModal('Nkwobi', 2200)">₦2,200</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/ukwa igbo.jpeg" alt="Ukwa">
+          <div class="card-body">
+            <h3>Ukwa</h3>
+            <p class="dish-desc">Hearty African breadfruit cooked until tender with peppers and aromatic spices for a comforting Igbo classic.</p>
+            <p class="price" data-dish="Ukwa" onclick="openOrderModal('Ukwa', 2200)">₦2,200</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/okpa igbo.jpeg" alt="Okpa">
+          <div class="card-body">
+            <h3>Okpa</h3>
+            <p class="dish-desc">Steamed Bambara-nut pudding seasoned with peppers and palm oil, soft, filling, and naturally rich.</p>
+            <p class="price" data-dish="Okpa" onclick="openOrderModal('Okpa', 2200)">₦2,200</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="igbo">
+          <img src="assets/images/Bitter leaf soup igbo.jpeg" alt="Ofe Onugbu with Swallow">
+          <div class="card-body">
+            <h3>Ofe Onugbu (Bitter Leaf Soup)</h3>
+            <p class="dish-desc">A rich, savory bitter leaf soup prepared with palm oil, assorted meat, and fish, served with soft swallow.</p>
+            <p class="price" data-dish="Ofe Onugbu (Bitter Leaf Soup)" onclick="openOrderModal('Ofe Onugbu (Bitter Leaf Soup)', 2800)">₦2,800</p>
+          </div>
+        </article>
+
+
+        <!-- Yoruba -->
+        <article class="card" data-group="yoruba">
+          <img src="assets/images/Efo-Riro-1.jpeg" alt="Efo Riro">
+          <div class="card-body">
+            <h3>Efo Riro</h3>
+            <p class="dish-desc">A rich, aromatic spinach-based stew with peppers, smoked fish, assorted meats, and bold spices. Yoruba classic.</p>
+            <p class="price" data-dish="Efo Riro" onclick="openOrderModal('Efo Riro', 2600)">₦2,600</p>
+          </div>
+        </article>
+
+
+        <article class="card" data-group="yoruba">
+          <img src="assets/images/Amala_and_Gbegiri_with_Ewedu_soup.jpg" alt="Amala and Gbegiri">
+          <div class="card-body">
+            <h3>Amala with Gbegiri & Ewedu</h3>
+            <p class="dish-desc">Smooth yam or cassava flour swallow served with bean soup (Gbegiri) and slimy okra leaf soup (Ewedu). Yoruba trio.</p>
+            <p class="price" data-dish="Amala with Gbegiri & Ewedu" onclick="openOrderModal('Amala with Gbegiri & Ewedu', 2900)">₦2,900</p>
+          </div>
+        </article>
+
+        <article class="card" data-group="yoruba">
+          <img src="assets/images/Ewa Aganyin Yoruba.jpeg" alt="Ewa Aganyin">
+          <div class="card-body">
+            <h3>Ewa Aganyin</h3>
+            <p class="dish-desc">Soft mashed beans served with a deeply seasoned, spicy pepper sauce.</p>
+            <p class="price" data-dish="Ewa Aganyin" onclick="openOrderModal('Ewa Aganyin', 2500)">₦2,500</p>
+          </div>
+        </article>
+
+        <article class="card" data-group="yoruba">
+          <img src="assets/images/Akara yoruba.jpeg" alt="Akara">
+          <div class="card-body">
+            <h3>Akara</h3>
+            <p class="dish-desc">Crispy fried bean fritters seasoned with peppers and onions.</p>
+            <p class="price" data-dish="Akara" onclick="openOrderModal('Akara', 1800)">₦1,800</p>
+          </div>
+        </article>
+
+        <article class="card" data-group="yoruba">
+          <img src="assets/images/buns hausa.jpeg" alt="Buns">
+          <div class="card-body">
+            <h3>Buns</h3>
+            <p class="dish-desc">Golden, lightly sweet fried dough bites with a crisp outside and soft center.</p>
+            <p class="price" data-dish="Buns" onclick="openOrderModal('Buns', 1800)">₦1,800</p>
+          </div>
+        </article>
+
+
+      </div>
+    </section>
+
+    <section id="culture" class="container culture">
+
+
+      <h2>Culture & Notes</h2>
+      <div class="tribes">
+        <div class="tribe">
+          <h3>Hausa (North)</h3>
+          <p>Hausa cuisine emphasizes grains like millet and rice, savory soups such as Miyan Kuka, grilled meats (Suya), and hearty stews served with "swallows" such as tuwo.</p>
+        </div>
+        <div class="tribe">
+          <h3>Igbo (East)</h3>
+          <p>Igbo foods feature soups like Ofe Nsala and Oha, fermented ingredients, and dishes like Abacha and Nkwobi — often spicy, smoky, and rich in palm oil flavors.</p>
+        </div>
+        <div class="tribe">
+          <h3>Yoruba (West)</h3>
+          <p>Yoruba cuisine includes Amala, Ewedu, Gbegiri, and Efo Riro — leafy stews and flavors built on palm oil, peppers, and local vegetables.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="container contact">
+      <h2>Contact & Reservations</h2>
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <h3>Get in Touch</h3>
+          <p><strong>Email:</strong> <a href="mailto:hello@nigeriaflavors.example">hello@nigeriaflavors.example</a></p>
+          <p><strong>Phone:</strong> +234‑800‑000‑0000</p>
+          <p><strong>Hours:</strong> Mon–Fri 11am–10pm | Sat–Sun 10am–11pm</p>
+          <p><strong>Address:</strong> 123 Flavor Street, Lagos, Nigeria</p>
+        </div>
+
+
+        <form class="reservation-form" id="reservationForm">
+
+          <h3>Book a Table</h3>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+            <div class="form-group">
+              <label for="time">Time</label>
+              <input type="time" id="time" name="time" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="guests">Number of Guests</label>
+            <input type="number" id="guests" name="guests" min="1" max="10000" required />
+          </div>
+          
+          <!-- Food Selection for Reservation -->
+          <fieldset class="form-group">
+            <legend>Add Food to Your Reservation (Optional)</legend>
+            <div class="food-grid">
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Tuwo Shinkafa (₦2500)" data-price="2500">
+                <span>Tuwo Shinkafa ₦2,500</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Suya (₦3000)" data-price="3000">
+                <span>Suya ₦3,000</span>
+              </label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Awara (₦2200)" data-price="2200"><span>Awara ₦2,200</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Dambu Nama (₦2500)" data-price="2500"><span>Dambu Nama ₦2,500</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Dan Wake (₦1800)" data-price="1800"><span>Dan Wake ₦1,800</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Fura Da Nono (₦2000)" data-price="2000"><span>Fura Da Nono ₦2,000</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Kilishi (₦3000)" data-price="3000"><span>Kilishi ₦3,000</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Kuli-Kuli (₦1500)" data-price="1500"><span>Kuli-Kuli ₦1,500</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Kunu (₦1000)" data-price="1000"><span>Kunu ₦1,000</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Masa (₦2000)" data-price="2000"><span>Masa ₦2,000</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Miyan Kuka (₦2800)" data-price="2800"><span>Miyan Kuka ₦2,800</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Miyan Taushe (₦2800)" data-price="2800"><span>Miyan Taushe ₦2,800</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Miyan Zogale (₦2800)" data-price="2800"><span>Miyan Zogale ₦2,800</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Tuwo Dawa (₦2500)" data-price="2500"><span>Tuwo Dawa ₦2,500</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Tuwo Massara (₦2500)" data-price="2500"><span>Tuwo Massara ₦2,500</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Zobo (₦1000)" data-price="1000"><span>Zobo ₦1,000</span></label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Ofe Nsala (₦2800)" data-price="2800">
+                <span>Ofe Nsala ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Abacha & Ugba (₦2200)" data-price="2200">
+                <span>Abacha ₦2,200</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Jollof Rice & Plantain (₦2800)" data-price="2800">
+                <span>Jollof Rice & Plantain ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Okro Soup with Fufu (₦2800)" data-price="2800">
+                <span>Okro Soup with Fufu ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Egusi Soup with Fufu (₦2800)" data-price="2800">
+                <span>Egusi Soup with Fufu ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Rice & Stew (₦2800)" data-price="2800">
+                <span>Rice & Stew ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Nkwobi (₦2200)" data-price="2200">
+                <span>Nkwobi ₦2,200</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Ukwa (₦2200)" data-price="2200">
+                <span>Ukwa ₦2,200</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Okpa (₦2200)" data-price="2200">
+                <span>Okpa ₦2,200</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Ofe Onugbu (Bitter Leaf Soup) (₦2800)" data-price="2800">
+                <span>Ofe Onugbu (Bitter Leaf Soup) ₦2,800</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Efo Riro (₦2600)" data-price="2600">
+                <span>Efo Riro ₦2,600</span>
+              </label>
+              <label class="food-checkbox">
+                <input type="checkbox" name="res-foods" value="Amala with Gbegiri (₦2900)" data-price="2900">
+                <span>Amala ₦2,900</span>
+              </label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Ewa Aganyin (₦2500)" data-price="2500"><span>Ewa Aganyin ₦2,500</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Akara (₦1800)" data-price="1800"><span>Akara ₦1,800</span></label>
+              <label class="food-checkbox"><input type="checkbox" name="res-foods" value="Buns (₦1800)" data-price="1800"><span>Buns ₦1,800</span></label>
+            </div>
+            <small id="selectedFoodsCount"></small>
+          </fieldset>
+          
+          <div class="form-group">
+            <label for="message">Special Requests</label>
+            <textarea id="message" name="message" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn">Reserve Now</button>
+          <p id="formStatus"></p>
+          <a href="reservations-board.html" class="btn" style="margin-top:0.75rem;display:inline-block;">See My Reservations</a>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Order Modal -->
+  <div id="orderModal" class="order-modal hidden">
+    <div class="order-container">
+      <div class="order-card">
+        <h2>Build Your Order</h2>
+        <div id="orderItems" class="order-items"></div>
+        <button type="button" class="btn order-add-item" onclick="addOrderItem()">Add another food</button>
+        
+        <form id="orderForm">
+          <div class="form-group">
+            <label for="orderName">Full Name</label>
+            <input type="text" id="orderName" name="orderName" required>
+          </div>
+          <div class="form-group">
+            <label for="orderPhone">Phone</label>
+            <input type="tel" id="orderPhone" name="orderPhone" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="orderTotal">Total</label>
+              <input type="number" id="orderTotal" name="orderTotal" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="orderAddress">Delivery Address</label>
+            <input type="text" id="orderAddress" name="orderAddress" placeholder="e.g. 123 Lagos Street" required>
+          </div>
+          <button type="submit" class="btn">Place Order</button>
+        </form>
+        <p id="orderStatus"></p>
+        <button type="button" class="order-close" onclick="closeOrderModal()" aria-label="Close">×</button>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Nigeria Flavors — Celebrating Hausa, Igbo, Yoruba cuisine</p>
+    </div>
+  </footer>
+
+
+<script src="auth.js"></script>
+<script src="app-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
