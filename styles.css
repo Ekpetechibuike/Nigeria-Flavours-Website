@@ -111,7 +111,7 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   .nav{left:auto;right:1rem;width:min(260px, calc(100% - 2rem))}
 }
 @media (max-width:800px){
-  .site-header .container{justify-content:space-between}
+  .site-header .container{justify-content:flex-start}
   .nav a{width:100%;margin-bottom:0.5rem}
   .nav button.nav-logout{width:100%;margin-bottom:0.5rem}
 }
@@ -172,6 +172,9 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   margin-left: 0;
   font-weight: 600;
   color: var(--text);
+}
+.site-header .container > .profile-nav-info {
+  margin-left: auto;
 }
 
 .profile-avatar-nav-nav {
