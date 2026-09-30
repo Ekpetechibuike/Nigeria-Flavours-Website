@@ -13,6 +13,52 @@ function safeJsonParse(value, fallback) {
   }
 }
 
+function getAuthStorage() {
+  try {
+    const session = typeof sessionStorage !== 'undefined' ? sessionStorage : null;
+    const local = typeof localStorage !== 'undefined' ? localStorage : null;
+
+    return {
+      get(key) {
+        return (session && session.getItem(key)) ?? (local && local.getItem(key));
+      },
+      set(key, value) {
+        if (session) session.setItem(key, value);
+        if (local) local.removeItem(key);
+      },
+      remove(key) {
+        if (session) session.removeItem(key);
+        if (local) local.removeItem(key);
+      }
+    };
+  } catch (error) {
+    return {
+      get: () => null,
+      set: () => {},
+      remove: () => {}
+    };
+  }
+}
+
+const authStorage = getAuthStorage();
+
+async function hashPassword(value) {
+  const text = (value || '').toString();
+  if (!text) return '';
+
+  if (window.crypto && window.crypto.subtle && typeof TextEncoder !== 'undefined') {
+    const encoded = new TextEncoder().encode(text);
+    const buffer = await window.crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(buffer)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  let hash = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
+  }
+  return hash.toString(16);
+}
+
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || '').trim());
 }
@@ -22,13 +68,13 @@ function validatePhone(phone) {
 }
 
 function getRegisteredUsers() {
-  const users = safeJsonParse(localStorage.getItem('registeredUsers'), []);
+  const users = safeJsonParse(authStorage.get('registeredUsers'), []);
   return Array.isArray(users) ? users : [];
 }
 
 function setCurrentUser(user, token) {
-  localStorage.setItem('authToken', token);
-  localStorage.setItem('user', JSON.stringify(user));
+  authStorage.set('authToken', token);
+  authStorage.set('user', JSON.stringify(user));
   if (typeof updateProfileNav === 'function') {
     updateProfileNav(user);
   }
@@ -36,14 +82,14 @@ function setCurrentUser(user, token) {
 
 // Check if user is currently authenticated
 function isAuthenticated() {
-  const token = localStorage.getItem('authToken');
-  const user = localStorage.getItem('user');
+  const token = authStorage.get('authToken');
+  const user = authStorage.get('user');
   return !!(token && user);
 }
 
 // Get the logged-in user object
 function getCurrentUser() {
-  const userStr = localStorage.getItem('user');
+  const userStr = authStorage.get('user');
   return userStr ? JSON.parse(userStr) : null;
 }
 
@@ -112,17 +158,22 @@ window.auth = {
       const registeredUsers = getRegisteredUsers();
       users = [...users, ...registeredUsers];
 
+      const passwordHash = await hashPassword(trimmedPassword);
+
       const user = users.find((u) => {
         const storedUsername = (u.username || '').toString().trim().toLowerCase();
         const storedEmail = (u.email || '').toString().trim().toLowerCase();
-        return (storedUsername === normalizedInput || storedEmail === normalizedInput) && String(u.password) === String(trimmedPassword);
+        const storedHash = (u.passwordHash || u.password || '').toString();
+        const matchesHash = storedHash === passwordHash;
+        const matchesLegacy = String(u.password || '') === String(trimmedPassword);
+        return (storedUsername === normalizedInput || storedEmail === normalizedInput) && (matchesHash || matchesLegacy);
       });
 
       if (!user) {
         throw new Error('Invalid username or password');
       }
 
-      const token = 'auth-token-' + Date.now();
+      const token = 'sess_' + Date.now() + '_' + Math.random().toString(16).slice(2);
       setCurrentUser(user, token);
       window.location.href = 'index.html';
       return user;
@@ -187,7 +238,7 @@ window.auth = {
         id: Date.now(),
         email: trimmedEmail,
         username: trimmedUsername,
-        password: trimmedPassword,
+        passwordHash: await hashPassword(trimmedPassword),
         phone: trimmedPhone,
         loginDate: new Date().toISOString(),
         image: 'assets/images/default-avatar.jpg'
@@ -209,8 +260,9 @@ window.auth = {
 
   logout: function() {
     try {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
+      authStorage.remove('authToken');
+      authStorage.remove('user');
+      localStorage.removeItem('registeredUsers');
 
       const loginNavLink = document.getElementById('loginNavLink');
       const profileNavLink = document.getElementById('profileNavLink');
@@ -238,7 +290,7 @@ window.auth = {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   if (window.auth.isAuthenticated()) {
-    const user = safeJsonParse(localStorage.getItem('user'), {});
+    const user = safeJsonParse(authStorage.get('user'), {});
     if (typeof updateProfileNav === 'function') {
       updateProfileNav(user);
     }
