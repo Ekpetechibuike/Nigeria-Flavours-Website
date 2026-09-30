@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const multer = require('multer');
+const crypto = require('crypto');
 const uploadDir = path.join(__dirname, '..', 'assets', 'user-images');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -45,10 +46,34 @@ app.use(cors({
 }));
 app.use(express.json());
 
+function hashPassword(value) {
+  return crypto.createHash('sha256').update(String(value || '')).digest('hex');
+}
+
+function normalizeUserRecord(user = {}) {
+  const nextUser = { ...user };
+
+  if (nextUser.passwordHash) {
+    delete nextUser.password;
+    return nextUser;
+  }
+
+  if (nextUser.password) {
+    nextUser.passwordHash = hashPassword(nextUser.password);
+    delete nextUser.password;
+  }
+
+  return nextUser;
+}
+
 // Safe CSP - dev localhost only, prod strict + Vercel/Render
 app.use((req, res, next) => {
-  res.removeHeader('Content-Security-Policy');
-  
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+
   if (process.env.NODE_ENV !== 'production') {
     // Dev: localhost only (no external domains)
     res.set('Content-Security-Policy', 
@@ -103,14 +128,15 @@ function readReservations(){
 function readUsers(){
   try{
     const raw = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(raw || '[]');
+    const users = JSON.parse(raw || '[]');
+    return Array.isArray(users) ? users.map(normalizeUserRecord) : [];
   } catch(e){
     return [];
   }
 }
 
 function writeUsers(users){
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users.map(normalizeUserRecord), null, 2), 'utf8');
 }
 
 function writeReservations(arr){
@@ -257,7 +283,7 @@ app.post('/api/auth/register', (req, res) => {
 
   const users = readUsers();
 
-  if (users.find(u => u.username === username)) {
+  if (users.find(u => (u.username || '').toLowerCase() === String(username).trim().toLowerCase())) {
     return res.status(400).json({ error: 'Username already exists' });
   }
 
@@ -268,14 +294,14 @@ app.post('/api/auth/register', (req, res) => {
     surname,
     phone,
     username,
-    password, // In production, hash this!
+    passwordHash: hashPassword(password),
     loginDate: new Date().toISOString(),
     image: '/assets/images/download (1).jpeg'
   };
   users.push(newUser);
   writeUsers(users);
 
-  const token = `fake-jwt-token-${newUser.id}-${Date.now()}`; // Simple token
+  const token = `sess_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
 
   res.json({ token, user: { id: newUser.id, username: newUser.username, email, firstName, surname, phone } });
 });
@@ -301,7 +327,11 @@ app.post('/api/auth/login', (req, res) => {
   const trimmedPassword = password.trim();
   console.log('Trimmed:', {username: trimmedUsername, password: '[HIDDEN]'});
   
-  const userIndex = users.findIndex(u => u.username === trimmedUsername && u.password === trimmedPassword);
+  const userIndex = users.findIndex(u => {
+    const matchesLegacy = (u.password || '').toString() === trimmedPassword;
+    const matchesHash = (u.passwordHash || '').toString() === hashPassword(trimmedPassword);
+    return (u.username || '').toString() === trimmedUsername && (matchesLegacy || matchesHash);
+  });
   console.log('User index found:', userIndex);
   
   if (userIndex === -1) {
@@ -313,7 +343,7 @@ app.post('/api/auth/login', (req, res) => {
   users[userIndex].loginDate = new Date().toISOString();
   writeUsers(users);
 
-  const token = `fake-jwt-token-${users[userIndex].id}-${Date.now()}`;
+  const token = `sess_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
   console.log('LOGIN SUCCESS for user:', users[userIndex].username);
   res.json({ token, user: {
     id: users[userIndex].id,
