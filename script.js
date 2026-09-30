@@ -114,24 +114,59 @@ function initReservationForm() {
   if (phoneInput && storedUser.phone && !phoneInput.value) {
     phoneInput.value = storedUser.phone;
   }
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(form);
     const statusEl = document.getElementById('formStatus');
+    const name = (formData.get('name') || '').toString().trim();
     const email = (formData.get('email') || '').toString().trim().toLowerCase();
     const phone = (formData.get('phone') || '').toString().trim();
-    
-    // Get selected foods
+    const date = (formData.get('date') || '').toString();
+    const time = (formData.get('time') || '').toString();
+    const guests = parseInt(formData.get('guests'));
+
+    if (!name || !email || !phone || !date || !time || !guests) {
+      if (statusEl) {
+        statusEl.textContent = 'Please complete all required reservation fields.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (statusEl) {
+        statusEl.textContent = 'Please enter a valid email address.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
+    if (!/^[0-9+()\-\s]{7,20}$/.test(phone)) {
+      if (statusEl) {
+        statusEl.textContent = 'Please enter a valid phone number.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
     const selectedFoods = [];
     const foodCheckboxes = form.querySelectorAll('input[name="res-foods"]:checked');
-    foodCheckboxes.forEach(cb => {
+    foodCheckboxes.forEach((cb) => {
       selectedFoods.push({
         name: cb.value,
         price: parseInt(cb.dataset.price)
       });
     });
+
+    if (selectedFoods.length === 0) {
+      if (statusEl) {
+        statusEl.textContent = 'Please select at least one dish before submitting your reservation.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
 
     const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
     const existingReservation = reservations.find((reservation) => {
@@ -147,18 +182,18 @@ function initReservationForm() {
       }
       return;
     }
-    
+
     const reservation = {
       id: Date.now(),
-      name: formData.get('name'),
+      name,
       email,
       phone,
-      date: formData.get('date'),
-      time: formData.get('time'),
-      guests: parseInt(formData.get('guests')),
-      message: formData.get('message'),
+      date,
+      time,
+      guests,
+      message: (formData.get('message') || '').toString().trim(),
       foods: selectedFoods,
-      total: selectedFoods.reduce((sum, f) => sum + f.price, 0),
+      total: selectedFoods.reduce((sum, food) => sum + (food.price || 0), 0),
       createdAt: new Date().toISOString()
     };
 
@@ -193,17 +228,17 @@ function initReservationForm() {
       localStorage.setItem('reservationPending', JSON.stringify(reservation));
 
       if (statusEl) {
-        statusEl.textContent = error.message || 'You have already reserved.';
+        statusEl.textContent = error.message || 'Reservation could not be saved. Please try again.';
         statusEl.style.color = '#dc2626';
       }
       return;
     }
-    
+
     form.reset();
     if (phoneInput && storedUser.phone) {
       phoneInput.value = storedUser.phone;
     }
-    
+
     setTimeout(() => {
       if (statusEl) statusEl.textContent = '';
     }, 5000);
