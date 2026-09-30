@@ -4,6 +4,36 @@
 
 // ========== CENTRALIZED AUTHENTICATION FUNCTIONS ==========
 
+function safeJsonParse(value, fallback) {
+  try {
+    const parsed = JSON.parse(value || 'null');
+    return parsed ?? fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || '').trim());
+}
+
+function validatePhone(phone) {
+  return /^[0-9+()\-\s]{7,20}$/.test((phone || '').trim());
+}
+
+function getRegisteredUsers() {
+  const users = safeJsonParse(localStorage.getItem('registeredUsers'), []);
+  return Array.isArray(users) ? users : [];
+}
+
+function setCurrentUser(user, token) {
+  localStorage.setItem('authToken', token);
+  localStorage.setItem('user', JSON.stringify(user));
+  if (typeof updateProfileNav === 'function') {
+    updateProfileNav(user);
+  }
+}
+
 // Check if user is currently authenticated
 function isAuthenticated() {
   const token = localStorage.getItem('authToken');
@@ -42,64 +72,59 @@ function checkGuest() {
 function handleAuthRedirects() {
   const path = window.location.pathname;
   const page = path.split('/').pop() || 'index.html';
-  
-  // Pages that require authentication
+
   const protectedPages = ['index.html', 'profile.html', 'reservations-board.html'];
-  
-  // Pages only for guests (not logged in)
   const guestPages = ['login.html', 'register.html'];
-  
+
   if (protectedPages.includes(page)) {
-    // Redirect to login if not authenticated
     requireAuth();
   } else if (guestPages.includes(page)) {
-    // Redirect to home if already authenticated
     checkGuest();
   }
 }
 
 // ========== window.auth OBJECT ==========
 
-// Define window.auth object with all required methods
 window.auth = {
-  // Check if user is authenticated
   isAuthenticated: function() {
     return isAuthenticated();
   },
 
-// Login function
   login: async function(username, password) {
     try {
       const normalizedInput = (username || '').toString().trim().toLowerCase();
+      const trimmedPassword = (password || '').toString();
+
+      if (!normalizedInput || !trimmedPassword) {
+        throw new Error('Please enter both username and password');
+      }
+
       let users = [];
       try {
         const response = await fetch('users.json', { cache: 'no-store' });
         if (response.ok) {
           users = await response.json();
         }
-      } catch (e) {
+      } catch (error) {
         console.log('Could not load users.json, using localStorage only');
       }
-      
-      const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+      const registeredUsers = getRegisteredUsers();
       users = [...users, ...registeredUsers];
-      
-      const user = users.find(u => {
+
+      const user = users.find((u) => {
         const storedUsername = (u.username || '').toString().trim().toLowerCase();
         const storedEmail = (u.email || '').toString().trim().toLowerCase();
-        return (storedUsername === normalizedInput || storedEmail === normalizedInput) && String(u.password) === String(password);
+        return (storedUsername === normalizedInput || storedEmail === normalizedInput) && String(u.password) === String(trimmedPassword);
       });
-      
+
       if (!user) {
         throw new Error('Invalid username or password');
       }
-      
+
       const token = 'auth-token-' + Date.now();
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      updateProfileNav(user);
+      setCurrentUser(user, token);
       window.location.href = 'index.html';
-      
       return user;
     } catch (error) {
       console.error('Login error:', error);
@@ -107,53 +132,74 @@ window.auth = {
     }
   },
 
-// Register function
   register: async function(email, phone, username, password) {
     try {
+      const trimmedEmail = (email || '').toString().trim();
+      const trimmedPhone = (phone || '').toString().trim();
+      const trimmedUsername = (username || '').toString().trim();
+      const trimmedPassword = (password || '').toString();
+
+      if (!trimmedEmail || !trimmedPhone || !trimmedUsername || !trimmedPassword) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      if (!validateEmail(trimmedEmail)) {
+        throw new Error('Please provide a valid email address');
+      }
+
+      if (!validatePhone(trimmedPhone)) {
+        throw new Error('Please provide a valid phone number');
+      }
+
+      if (trimmedUsername.length < 3) {
+        throw new Error('Username must be at least 3 characters long');
+      }
+
+      if (trimmedPassword.length < 6) {
+        throw new Error('Password must be at least 6 characters long');
+      }
+
       let users = [];
       try {
         const response = await fetch('users.json', { cache: 'no-store' });
         if (response.ok) {
           users = await response.json();
         }
-      } catch (e) {
+      } catch (error) {
         console.log('Could not load users.json, using localStorage only');
       }
-      
-      const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+      const registeredUsers = getRegisteredUsers();
       users = [...users, ...registeredUsers];
-      
-      const normalizedUsername = (username || '').toString().trim().toLowerCase();
-      const normalizedEmail = (email || '').toString().trim().toLowerCase();
-      
-      if (users.some(u => (u.username || '').toString().trim().toLowerCase() === normalizedUsername)) {
+
+      const normalizedUsername = trimmedUsername.toLowerCase();
+      const normalizedEmail = trimmedEmail.toLowerCase();
+
+      if (users.some((u) => (u.username || '').toString().trim().toLowerCase() === normalizedUsername)) {
         throw new Error('Username already exists');
       }
-      
-      if (users.some(u => (u.email || '').toString().trim().toLowerCase() === normalizedEmail)) {
+
+      if (users.some((u) => (u.email || '').toString().trim().toLowerCase() === normalizedEmail)) {
         throw new Error('Email already exists');
       }
-      
+
       const newUser = {
         id: Date.now(),
-        email: email.trim(),
-        username: username.trim(),
-        password: password,
-        phone: phone.trim(),
+        email: trimmedEmail,
+        username: trimmedUsername,
+        password: trimmedPassword,
+        phone: trimmedPhone,
         loginDate: new Date().toISOString(),
         image: 'assets/images/default-avatar.jpg'
       };
-      
-      const localUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+      const localUsers = getRegisteredUsers();
       localUsers.push(newUser);
       localStorage.setItem('registeredUsers', JSON.stringify(localUsers));
-      
+
       const token = 'auth-token-' + Date.now();
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      updateProfileNav(newUser);
+      setCurrentUser(newUser, token);
       window.location.href = 'index.html';
-      
       return newUser;
     } catch (error) {
       console.error('Registration error:', error);
@@ -161,31 +207,26 @@ window.auth = {
     }
   },
 
-// Logout function
   logout: function() {
     try {
-      // Clear authentication state but keep registered accounts so users can sign in later
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      
-      // Reset nav UI
+
       const loginNavLink = document.getElementById('loginNavLink');
       const profileNavLink = document.getElementById('profileNavLink');
       const logoutNavBtn = document.getElementById('logoutNavBtn');
       const profileNavInfo = document.getElementById('profileNavInfo');
-      
+
       if (profileNavInfo) profileNavInfo.classList.add('hidden');
       if (profileNavLink) profileNavLink.classList.add('hidden');
       if (logoutNavBtn) logoutNavBtn.classList.add('hidden');
       if (loginNavLink) loginNavLink.classList.remove('hidden');
-      
-      // Close nav menu
+
       const nav = document.getElementById('nav');
       if (nav) nav.dataset.open = 'false';
       const navToggle = document.getElementById('navToggle');
       if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
-      
-      // Redirect to login page so user can login again
+
       window.location.href = 'login.html';
     } catch (error) {
       console.error('Logout error:', error);
@@ -196,10 +237,11 @@ window.auth = {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if user is already authenticated on page load
   if (window.auth.isAuthenticated()) {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    updateProfileNav(user);
+    const user = safeJsonParse(localStorage.getItem('user'), {});
+    if (typeof updateProfileNav === 'function') {
+      updateProfileNav(user);
+    }
   }
 });
 
@@ -216,6 +258,20 @@ function showError(message, container = document) {
   setTimeout(() => {
     if (errorDiv) errorDiv.style.display = 'none';
   }, 5000);
+}
+
+function showSuccess(message, container = document) {
+  const successDiv = container.getElementById('successMessage');
+  if (successDiv) {
+    successDiv.textContent = message;
+    successDiv.style.display = 'block';
+    successDiv.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    alert(message);
+  }
+  setTimeout(() => {
+    if (successDiv) successDiv.style.display = 'none';
+  }, 3000);
 }
 
 function showSuccess(message, container = document) {
