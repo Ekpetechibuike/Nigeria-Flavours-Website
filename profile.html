@@ -84,14 +84,13 @@
     </div>
   </div>
 
-  <script src="auth.js"></script>
   <script src="app-config.js"></script>
   <script src="script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const user = getCurrentUser();
       if (user && user.id) {
         loadProfile(user);
       } else {
@@ -128,8 +127,8 @@
         return;
       }
 
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const token = localStorage.getItem('authToken');
+      const user = getCurrentUser() || {};
+      const token = authStorage.get('authToken');
       const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000/api'
         : '/api';
@@ -168,12 +167,12 @@
 
         if (response.ok && data.user) {
           user.image = data.user.image || data.imageUrl || previewImage;
-          localStorage.setItem('user', JSON.stringify(user));
+          authStorage.set('user', JSON.stringify(user));
           loadProfile(user);
           showSuccess('Avatar uploaded successfully!');
         } else {
           user.image = previewImage;
-          localStorage.setItem('user', JSON.stringify(user));
+          authStorage.set('user', JSON.stringify(user));
           loadProfile(user);
           showSuccess('Avatar saved locally. Your profile image is ready to use.');
         }
@@ -181,9 +180,8 @@
         e.target.value = '';
       } catch (error) {
         const previewImage = await readFileAsDataUrl();
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
         user.image = previewImage;
-        localStorage.setItem('user', JSON.stringify(user));
+        authStorage.set('user', JSON.stringify(user));
         loadProfile(user);
         showSuccess('Avatar saved locally. Your profile image is ready to use.');
         console.error('Upload error:', error);
