@@ -11,7 +11,7 @@ if (!fs.existsSync(uploadDir)) {
 const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (req, file, cb) => {
-    cb(null, `user-${req.body.userId}-${Date.now()}-${file.originalname}`);
+    cb(null, `user-${req.body.id || req.body.userId}-${Date.now()}-${file.originalname}`);
   }
 });
 const upload = multer({ storage });
@@ -296,7 +296,7 @@ app.post('/api/auth/register', (req, res) => {
     username,
     passwordHash: hashPassword(password),
     loginDate: new Date().toISOString(),
-    image: '/assets/images/download (1).jpeg'
+    image: '/assets/images/default-avatar.svg'
   };
   users.push(newUser);
   writeUsers(users);
@@ -408,4 +408,3 @@ function startServer(port) {
 }
 
 startServer(PORT);
-
