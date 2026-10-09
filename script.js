@@ -5,13 +5,16 @@
 
 // ========== AUTH & PROFILE FUNCTIONS ==========
 function checkAuth() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const storedUser = sessionStorage.getItem('user') || localStorage.getItem('user') || '{}';
+  const user = JSON.parse(storedUser);
   const loginNavLink = document.getElementById('loginNavLink');
   const profileNavLink = document.getElementById('profileNavLink');
   const logoutNavBtn = document.getElementById('logoutNavBtn');
   const profileNavInfo = document.getElementById('profileNavInfo');
 
-  if (user && user.id && localStorage.getItem('authToken')) {
+  const authToken = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+
+  if (user && user.id && authToken) {
     updateProfileNav(user);
     if (loginNavLink) loginNavLink.classList.add('hidden');
   } else {
@@ -20,6 +23,18 @@ function checkAuth() {
     if (logoutNavBtn) logoutNavBtn.classList.add('hidden');
     if (loginNavLink) loginNavLink.classList.remove('hidden');
   }
+}
+
+function getProfileImageUrl(image) {
+  if (typeof image !== 'string' || !image) {
+    return 'assets/images/default-avatar.svg';
+  }
+
+  if (image.startsWith('/assets/user-images/') && window.APP_API_BASE) {
+    return new URL(image, window.APP_API_BASE).href;
+  }
+
+  return image;
 }
 
 function updateProfileNav(user) {
@@ -41,7 +56,7 @@ function updateProfileNav(user) {
       profileUsername.textContent = user.username || user.name || 'User';
     }
     if (profileAvatarNav) {
-      profileAvatarNav.src = user.image || 'assets/images/default-avatar.jpg';
+      profileAvatarNav.src = getProfileImageUrl(user.image);
     }
   }
 }
@@ -49,7 +64,9 @@ function updateProfileNav(user) {
 // Logout function - clears auth and redirects to login page
 function logout() {
   try {
-    // Clear ALL auth-related localStorage
+    // Clear ALL auth-related storage
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('registeredUsers');
@@ -538,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function() {
     username: 'chibuike',
     name: 'EKPETE Chibuike',
     email: 'Ekpetechibuike@icloud.com',
-    image: 'assets/images/default-avatar.jpg'
+    image: 'assets/images/default-avatar.svg'
   };
   
   // Auto-login for demo purposes (optional - remove in production)
