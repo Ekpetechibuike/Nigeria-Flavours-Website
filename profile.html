@@ -43,7 +43,7 @@
 <body>
   <div class="profile-container">
     <div class="profile-card">
-      <img id="profileAvatar" src="assets/images/default-avatar.jpg" alt="Profile Avatar" class="profile-avatar-large">
+      <img id="profileAvatar" src="assets/images/default-avatar.svg" alt="Profile Avatar" class="profile-avatar-large">
       
       <div class="profile-name">
         <h1 id="profileFullName">Loading...</h1>
@@ -99,7 +99,7 @@
     });
 
     function loadProfile(user) {
-      document.getElementById('profileAvatar').src = user.image || 'assets/images/default-avatar.jpg';
+      document.getElementById('profileAvatar').src = getProfileImageUrl(user.image);
 
   document.getElementById('profileFullName').textContent = user.username || '-';
   document.getElementById('profileUsername').textContent = user.username || '-';
@@ -129,9 +129,9 @@
 
       const user = getCurrentUser() || {};
       const token = authStorage.get('authToken');
-      const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      const API_URL = window.APP_API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000/api'
-        : '/api';
+        : '/api');
 
       const readFileAsDataUrl = () => new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -142,8 +142,8 @@
 
       try {
         const formData = new FormData();
-        formData.append('avatar', file);
         formData.append('id', user.id || '');
+        formData.append('avatar', file);
 
         const response = await fetch(`${API_URL}/auth/profile-upload`, {
           method: 'POST',
