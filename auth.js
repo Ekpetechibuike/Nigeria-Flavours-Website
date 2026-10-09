@@ -241,7 +241,7 @@ window.auth = {
         passwordHash: await hashPassword(trimmedPassword),
         phone: trimmedPhone,
         loginDate: new Date().toISOString(),
-        image: 'assets/images/default-avatar.jpg'
+        image: 'assets/images/default-avatar.svg'
       };
 
       const localUsers = getRegisteredUsers();
