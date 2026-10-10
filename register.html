@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Create your Nigeria Flavors account to reserve a table, manage your profile, and enjoy a more personalized dining experience." />
+  <meta name="robots" content="noindex,follow" />
   <title>Create Account — Nigeria Flavors</title>
   <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="./favicon.png" />
   <link rel="shortcut icon" href="./favicon.ico" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#d96c29" />
+  <meta name="theme-color" content="#f8f5ee" />
   <link rel="stylesheet" href="styles.css" />
   <script src="pwa.js" defer></script>
 <script src="auth.js"></script>
@@ -20,166 +22,66 @@
       }
     })();
   </script>
-  <style>
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    .auth-container {
-      width: 100%;
-      max-width: 400px;
-      padding: 1rem;
-    }
-    .auth-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,.1);
-      text-align: center;
-    }
-    .auth-card h1 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.75rem;
-      color: var(--accent);
-    }
-    .auth-card p {
-      margin: 0 0 2rem 0;
-      color: var(--muted);
-    }
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: left;
-    }
-    .form-group label {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--text);
-    }
-    .form-group input {
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 1rem;
-      background: var(--bg);
-      color: var(--text);
-      transition: all 0.2s;
-    }
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200,90,23,.1);
-    }
-    .auth-card .btn {
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      width: 100%;
-    }
-    .auth-links {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-    .auth-links p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .auth-links a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .auth-links a:hover {
-      text-decoration: underline;
-    }
-    .error-message {
-      color: #dc2626;
-      background: #fee2e2;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      display: none;
-      margin-bottom: 1rem;
-    }
-    .success-message {
-      color: #059669;
-      background: #d1fae5;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      display: none;
-      margin-bottom: 1rem;
-    }
-    .logo-link {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-    }
-    .logo-link img, .logo-link span {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.25rem;
-    }
-  </style>
 </head>
-<body>
-  <div class="auth-container">
-    <div class="auth-card">
-      
-      
-      <h1>Create Account</h1>
-      <p>Join authentic Nigeria Flavours</p>
+<body class="auth-page register-page">
+  <main class="auth-shell">
+    <aside class="auth-story">
+      <a class="auth-brand" href="index.html" aria-label="Nigeria Flavors home">
+        <img src="./favicon.png" alt="" />
+        <span>Nigeria <strong>Flavors</strong></span>
+      </a>
+      <div class="auth-story-copy">
+        <p class="eyebrow">A taste of home, wherever you are</p>
+        <h2>Good food is better<br><em>when we share it.</em></h2>
+        <p>Join our table to make reservations, manage your profile, and discover the dishes that bring us together.</p>
+      </div>
+      <a class="auth-home-link" href="index.html">← Back to the restaurant</a>
+    </aside>
 
-      <div id="errorMessage" class="error-message"></div>
-      <div id="successMessage" class="success-message"></div>
+    <div class="auth-container">
+      <div class="auth-card">
+        <p class="eyebrow auth-card-eyebrow">Come on in</p>
+        <h1>Create Account</h1>
+        <p class="auth-description">A few details and there’s a place for you at our table.</p>
 
-      <form id="registerForm" class="auth-form">
+        <div id="errorMessage" class="error-message" aria-live="polite" role="alert"></div>
+        <div id="successMessage" class="success-message" aria-live="polite" role="status"></div>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" id="email" placeholder="Enter Email" required>
+        <form id="registerForm" class="auth-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter email address" autocomplete="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter phone number" autocomplete="tel" required>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" autocomplete="username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" autocomplete="new-password" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+          </div>
+          <button type="submit" class="btn">Create Account</button>
+        </form>
+
+        <div class="auth-links">
+          <p>Already have an account? <a href="login.html">Sign in</a></p>
         </div>
-
-
-
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
-        </div>
-
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Choose a username" required>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Create a password" required>
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
-        </div>
-        <button type="submit" class="btn">Create Account</button>
-      </form>
-
-      <div class="auth-links">
-        <p>Already have an account? <a href="login.html">Sign in</a></p>
       </div>
     </div>
-  </div>
+  </main>
 
-<script src="auth.js"></script>
+  <script src="auth.js"></script>
   <script src="auth-handlers.js"></script>
   <script src="app-config.js"></script>
   <script src="script.js"></script>
