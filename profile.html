@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="./favicon.png" />
   <link rel="shortcut icon" href="./favicon.ico" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#d96c29" />
+  <meta name="theme-color" content="#f8f5ee" />
   <link rel="stylesheet" href="styles.css" />
   <script src="pwa.js" defer></script>
   <script src="auth.js"></script>
@@ -20,69 +20,59 @@
       }
     })();
   </script>
-  <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
-    .profile-container { width: 100%; max-width: 500px; }
-    .profile-card { background: var(--card-bg); border-radius: 12px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,.1); }
-    .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 1.5rem; border: 4px solid var(--accent); }
-    .profile-field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .profile-field label { font-weight: 500; font-size: 0.95rem; color: var(--text); }
-    .profile-field span { padding: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
-    .profile-name { text-align: center; margin: 1rem 0; }
-    .profile-name h1 { font-size: 1.75rem; color: var(--accent); margin: 0 0 0.5rem; }
-    .profile-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
-
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
-    label.btn { cursor: pointer; }
-
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary { background: var(--muted); color: white; }
-    @media (max-width: 600px) { .profile-actions { flex-direction: column; } }
-  </style>
 </head>
-<body>
-  <div class="profile-container">
+<body class="profile-page">
+  <header class="profile-header">
+    <a class="profile-brand" href="index.html" aria-label="Nigeria Flavors home">
+      <img src="./favicon.png" alt="" />
+      <span>Nigeria <strong>Flavors</strong></span>
+    </a>
+    <a class="profile-back-link" href="index.html">Back to the restaurant <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-page-intro">
+      <p class="eyebrow">Your place at our table</p>
+      <h1>Your profile</h1>
+      <p>Keep your details close and make your next visit feel like coming home.</p>
+    </div>
+
     <div class="profile-card">
       <img id="profileAvatar" src="assets/images/default-avatar.svg" alt="Profile Avatar" class="profile-avatar-large">
-      
+
       <div class="profile-name">
-        <h1 id="profileFullName">Loading...</h1>
+        <h2 id="profileFullName">Loading...</h2>
+        <p>Your Nigeria Flavors account</p>
       </div>
-      
+
       <div class="profile-field">
         <label>Username</label>
         <span id="profileUsername">-</span>
       </div>
-      
+
       <div class="profile-field">
         <label>Email</label>
         <span id="profileEmail">-</span>
       </div>
-      
 
-
-
-      
       <div class="profile-field">
         <label>Phone Number</label>
         <span id="profilePhone">-</span>
       </div>
-      
+
       <div class="profile-field">
         <label>Last Login</label>
         <span id="profileLoginDate">-</span>
       </div>
-      
 
       <div class="profile-actions">
-        <label for="avatarUpload" class="btn btn-primary">Upload Avatar</label>
-        <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
-        <a href="index.html" class="btn btn-primary">Back to Home</a>
-        <button onclick="logout()" class="btn btn-secondary">Logout</button>
+        <label for="avatarUpload" class="btn">Upload Avatar</label>
+        <input type="file" id="avatarUpload" accept="image/*">
+        <a href="index.html" class="btn">Back to Home</a>
+        <button onclick="logout()" class="btn" type="button">Logout</button>
       </div>
-
     </div>
-  </div>
+  </main>
 
   <script src="app-config.js"></script>
   <script src="script.js"></script>
