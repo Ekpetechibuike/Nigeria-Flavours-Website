@@ -225,8 +225,57 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   .order-card{padding:1.5rem 1rem;border-radius:16px 16px 0 0}
 }
 
-
-
-
-
-
+/* Restaurant styling for ordering and reservation management */
+.board-page{--board-ink:#18372f;--board-paper:#f8f5ee;--board-card:#fffdf8;--board-muted:#706f66;--board-line:#e8e2d6;min-height:100vh;color:var(--board-ink);background:var(--board-paper);font-family:Inter,"Avenir Next",Avenir,"Segoe UI",sans-serif}
+.board-page .container{max-width:1200px;padding:1.25rem 2rem}
+.board-page .site-header{background:rgba(248,245,238,.94);border-color:var(--board-line);box-shadow:0 4px 24px rgba(24,55,47,.04)}
+.board-page .site-header .container{min-height:78px}
+.board-page .logo img{width:38px;height:38px;object-fit:contain}
+.board-page .nav-toggle{border-radius:999px;background:#18372f}
+.board-page .nav{border-color:var(--board-line);border-radius:0 0 16px 16px;background:var(--board-card);box-shadow:0 18px 30px rgba(24,55,47,.12)}
+.board-page .nav a{color:var(--board-ink);background:transparent}
+.board-page .nav a:hover{background:rgba(24,55,47,.07)}
+.board-page .nav .nav-logout{border-radius:999px;background:#c45e30!important;text-align:center}
+.board-page .profile-nav-info{color:var(--board-ink)}
+.board-page .board-header{padding:3rem 0 1.5rem}
+.board-page .board-header::before{display:block;margin-bottom:.8rem;color:#9c572b;content:"YOUR TABLE, AT A GLANCE";font-size:.72rem;font-weight:800;letter-spacing:.16em}
+.board-page .board-header h1{margin:0;color:var(--board-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:500;letter-spacing:-.05em;line-height:1.05}
+.board-page .board-header p{max-width:48rem;margin:.8rem 0 0;color:var(--board-muted);font-size:1rem;line-height:1.8}
+.board-page .board-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-bottom:1.5rem}
+.board-page .stat-card{border:1px solid var(--board-line);border-radius:18px;background:var(--board-card);box-shadow:0 8px 24px rgba(24,55,47,.045)}
+.board-page .stat-card strong{color:#b75d2c;font-family:Georgia,"Times New Roman",serif;font-size:2.4rem;font-weight:500}
+.board-page .stat-card span{color:var(--board-muted);font-size:.86rem}
+.board-page .board-section{margin-bottom:1.25rem;padding:1.5rem;border:1px solid var(--board-line);border-radius:20px;background:var(--board-card);box-shadow:0 10px 28px rgba(24,55,47,.05)}
+.board-page .section-heading{margin-bottom:1.1rem}
+.board-page .section-heading h2{margin:0;color:var(--board-ink);font-family:Georgia,"Times New Roman",serif;font-size:1.65rem;font-weight:500;letter-spacing:-.025em}
+.board-page .section-heading p{margin:.35rem 0 0;color:var(--board-muted);font-size:.9rem;line-height:1.6}
+.board-page .table-scroll{overflow-x:auto;border:1px solid var(--board-line);border-radius:12px}
+.board-page .board-table{min-width:900px;border-collapse:separate;border-spacing:0;background:#fff}
+.board-page .board-table th,.board-page .board-table td{padding:.9rem 1rem;border:0;border-bottom:1px solid var(--board-line);text-align:left;vertical-align:top}
+.board-page .board-table th{background:#f3eee4;color:var(--board-ink);font-size:.73rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.board-page .board-table tbody tr:last-child td{border-bottom:0}
+.board-page .board-table tbody tr:hover{background:#faf7f0}
+.board-page .board-table td{color:#3f514a;font-size:.88rem;line-height:1.55}
+.board-page .board-empty{padding:1.1rem;border:1px dashed #d3c5b4;border-radius:12px;background:#faf7f0;color:var(--board-muted);text-align:center}
+.board-page :focus-visible{outline:3px solid #d98a53;outline-offset:3px}
+.order-modal{background:rgba(16,42,35,.52);backdrop-filter:blur(7px)}
+.order-container{padding:1.25rem}
+.order-card{width:min(100%,560px);max-height:min(90vh,900px);padding:2rem;border:1px solid #e8e2d6;border-radius:24px;background:#fffdf8;color:#18372f;box-shadow:0 28px 80px rgba(16,42,35,.24)}
+.order-card h2{margin:0 0 .6rem;color:#18372f;font-family:Georgia,"Times New Roman",serif;font-size:2rem;font-weight:500;letter-spacing:-.04em}
+.order-items{gap:.65rem;margin:1.2rem 0}
+.order-item-row{grid-template-columns:minmax(0,1fr) 5rem auto;gap:.65rem}
+.order-item-row select,.order-item-row input,#orderForm input{min-height:46px;padding:.75rem .85rem;border:1px solid #e4dccd;border-radius:12px;background:#fff;color:#18372f;font:inherit}
+.order-item-row select:focus,.order-item-row input:focus,#orderForm input:focus{outline:none;border-color:#ad8e72;box-shadow:0 0 0 3px rgba(196,94,48,.12)}
+.order-card #orderForm{gap:.8rem}
+.order-card #orderForm .form-group{gap:.45rem;margin:0}
+.order-card #orderForm label{color:#18372f;font-size:.8rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.order-card #orderForm .form-row{display:block}
+.order-card #orderForm .btn{min-height:50px;border-radius:999px;background:linear-gradient(135deg,#c45e30,#9a4721);box-shadow:0 12px 24px rgba(196,94,48,.18)}
+.order-card .order-add-item{min-height:42px;margin-bottom:1.1rem;padding:.7rem 1rem;border:1px solid #d8c8b5;border-radius:999px;background:transparent;color:#8b4829;box-shadow:none}
+.order-card .order-add-item:hover{border-color:#c45e30;background:#fcf2e9;box-shadow:none}
+.order-remove-item{color:#a84b28}
+.order-remove-item:hover{color:#78391e}
+.order-close{top:1rem;right:1rem;display:grid;width:38px;height:38px;place-items:center;border-radius:50%;background:#f3eee4;color:#53645d;font-size:1.55rem;line-height:1}
+#orderStatus{color:#53645d;line-height:1.6}
+@media (max-width:720px){.board-page .container{padding:1rem 1.1rem}.board-page .board-header{padding:2rem 0 1.1rem}.board-page .board-summary{grid-template-columns:1fr 1fr}.board-page .board-section{padding:1rem;border-radius:16px}.board-page .board-table th,.board-page .board-table td{padding:.75rem}}
+@media (max-width:500px){.board-page .board-summary{grid-template-columns:1fr}.order-container{align-items:flex-end;padding:0}.order-card{max-height:92vh;padding:1.6rem 1.1rem calc(1.4rem + env(safe-area-inset-bottom,0px));border-radius:24px 24px 0 0}.order-card h2{padding:0 2rem;font-size:1.7rem}.order-item-row{grid-template-columns:minmax(0,1fr) 4rem auto;gap:.4rem}.order-item-row select,.order-item-row input{min-width:0;padding:.65rem .5rem;font-size:.9rem}}
