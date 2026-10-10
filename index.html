@@ -3,37 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nigeria Flavors — Cultural Restaurant</title>
+  <title>Nigeria Flavors | Nigerian food, made with tradition</title>
+  <meta name="description" content="Discover the bold, comforting flavors of Hausa, Igbo, and Yoruba cooking. Explore our menu, order Nigerian favorites, or reserve your table." />
   <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="./favicon.png" />
   <link rel="shortcut icon" href="./favicon.ico" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#d96c29" />
+  <meta name="theme-color" content="#f8f5ee" />
   <link rel="stylesheet" href="styles.css" />
   <script src="pwa.js" defer></script>
-  <script src="auth.js"></script>
-  <script>
-    // Early auth check - redirect to login if not authenticated
-    (function() {
-      if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-      }
-    })();
-  </script>
 </head> 
-<body>
+<body class="home-page">
   <header class="site-header">
     <div class="container">
-<div class="logo" aria-label="Nigeria Flavors">
-    <img src="./favicon.png" alt="Nigeria Flavors logo" />
-</div>
-<div class="header-actions">
-  <a id="profileNavInfo" class="profile-nav-info hidden" href="profile.html" aria-label="View your profile" title="View your profile">
-    <img id="profileAvatarNav" src="assets/images/default-avatar.svg" alt="" class="profile-avatar-nav-nav">
-    <span id="profileUsername" class="profile-username hidden"></span>
-  </a>
-  <button id="navToggle" class="nav-toggle" aria-label="Open navigation" aria-controls="nav" aria-expanded="false">☰</button>
-</div>
+      <a class="logo" href="index.html" aria-label="Nigeria Flavors home">
+        <img src="./favicon.png" alt="" />
+        <span class="logo-wordmark">Nigeria <strong>Flavors</strong></span>
+      </a>
       <nav id="nav" class="nav" data-open="false">
         <a href="index.html">Home</a>
         <a href="#menu">Menu</a>
@@ -42,30 +28,61 @@
         <a href="login.html" id="loginNavLink">Login</a>
         <a href="profile.html" id="profileNavLink" class="hidden">Profile</a>
         <button id="logoutNavBtn" class="nav-logout hidden" type="button" onclick="logout()">Logout</button>
+        <a class="nav-reserve" href="#contact">Book a table</a>
       </nav>
+      <div class="header-actions">
+        <a id="profileNavInfo" class="profile-nav-info hidden" href="profile.html" aria-label="View your profile" title="View your profile">
+          <img id="profileAvatarNav" src="assets/images/default-avatar.svg" alt="" class="profile-avatar-nav-nav">
+          <span id="profileUsername" class="profile-username hidden"></span>
+        </a>
+        <button id="installAppBtn" class="install-app hidden" type="button" aria-label="Install app">Install app</button>
+        <button id="navToggle" class="nav-toggle" aria-label="Open navigation" aria-controls="nav" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
     </div>
-</header>
+  </header>
 
   <main>
     <section class="hero">
-      <div class="container">
-        <h1>Authentic Nigerian Dishes</h1>
-        <p>Explore the flavors and cultural foods of the three major tribes: Hausa, Igbo, and Yoruba.</p>
-        <div class="hero-actions">
-          <a class="btn" href="#menu">See Menu</a>
-          <button id="installAppBtn" class="install-app hidden" type="button" aria-label="Install app">Install App</button>
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> A taste of home, wherever you are</p>
+          <h1>Big Nigerian flavour.<br><em>Made to bring us together.</em></h1>
+          <p class="hero-description">From smoky suya to soulful soups, discover the dishes and traditions that make every Nigerian table feel like home.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#menu">Explore the menu <span aria-hidden="true">→</span></a>
+            <a class="hero-text-link" href="#contact">Come dine with us <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-note">
+            <span class="hero-note-icon" aria-hidden="true">✳</span>
+            <span>Hausa · Igbo · Yoruba<br><strong>One table, many stories.</strong></span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <img src="assets/images/jollof rice and plantain igbo.jpeg" alt="Nigerian jollof rice served with golden fried plantain" fetchpriority="high" />
+          <div class="hero-image-caption">
+            <span class="caption-mark" aria-hidden="true">✳</span>
+            <span><strong>Made with heritage</strong><small>Served with heart</small></span>
+          </div>
+          <span class="hero-stamp" aria-label="Proudly Nigerian">Naija<br>made</span>
         </div>
       </div>
     </section>
 
     <section id="menu" class="container menu-section">
-      <h2>Our Menu</h2>
-      <p class="lead">Filter by region:</p>
+      <div class="section-intro">
+        <div>
+          <p class="eyebrow">From our kitchen to your table</p>
+          <h2>Good food. <em>Great stories.</em></h2>
+          <p class="lead">Explore beloved Nigerian classics from across the regions.</p>
+        </div>
+        <a class="section-link" href="#contact">Save your seat <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="filter-label">Explore by region</p>
       <div class="filters">
-        <button class="filter active" data-group="all">All</button>
-        <button class="filter" data-group="hausa">Hausa (North)</button>
-        <button class="filter" data-group="igbo">Igbo (East)</button>
-        <button class="filter" data-group="yoruba">Yoruba (West)</button>
+        <button class="filter active" data-group="all">All dishes</button>
+        <button class="filter" data-group="hausa">Hausa <span>· North</span></button>
+        <button class="filter" data-group="igbo">Igbo <span>· East</span></button>
+        <button class="filter" data-group="yoruba">Yoruba <span>· West</span></button>
       </div>
 
       <div class="cards" id="cards">
@@ -357,8 +374,11 @@
 
     <section id="culture" class="container culture">
 
-
-      <h2>Culture & Notes</h2>
+      <div class="culture-heading">
+        <p class="eyebrow">Three regions. Countless memories.</p>
+        <h2>More than a meal.<br><em>A little piece of home.</em></h2>
+        <p>Every recipe carries a story. We bring the distinct tastes of Nigeria's regions together, just as they belong: around one table.</p>
+      </div>
       <div class="tribes">
         <div class="tribe">
           <h3>Hausa (North)</h3>
@@ -376,10 +396,17 @@
     </section>
 
     <section id="contact" class="container contact">
-      <h2>Contact & Reservations</h2>
+      <div class="section-intro contact-heading">
+        <div>
+          <p class="eyebrow">Your table is waiting</p>
+          <h2>Make it a <em>gathering.</em></h2>
+          <p class="lead">Bring your people. We’ll take care of the food.</p>
+        </div>
+      </div>
       <div class="contact-wrapper">
         <div class="contact-info">
-          <h3>Get in Touch</h3>
+          <p class="eyebrow">Come say hello</p>
+          <h3>A warm welcome<br>is always on the menu.</h3>
           <p><strong>Email:</strong> <a href="mailto:hello@nigeriaflavors.example">hello@nigeriaflavors.example</a></p>
           <p><strong>Phone:</strong> +234‑800‑000‑0000</p>
           <p><strong>Hours:</strong> Mon–Fri 11am–10pm | Sat–Sun 10am–11pm</p>
@@ -419,7 +446,7 @@
           
           <!-- Food Selection for Reservation -->
           <fieldset class="form-group">
-            <legend>Add Food to Your Reservation (Optional)</legend>
+            <legend>Choose dishes for your table</legend>
             <div class="food-grid">
               <label class="food-checkbox">
                 <input type="checkbox" name="res-foods" value="Tuwo Shinkafa (₦2500)" data-price="2500">
