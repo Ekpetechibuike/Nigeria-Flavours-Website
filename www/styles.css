@@ -468,3 +468,67 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
 #orderStatus{color:#53645d;line-height:1.6}
 @media (max-width:720px){.board-page .container{padding:1rem 1.1rem}.board-page .board-header{padding:2rem 0 1.1rem}.board-page .board-summary{grid-template-columns:1fr 1fr}.board-page .board-section{padding:1rem;border-radius:16px}.board-page .board-table th,.board-page .board-table td{padding:.75rem}}
 @media (max-width:500px){.board-page .board-summary{grid-template-columns:1fr}.order-container{align-items:flex-end;padding:0}.order-card{max-height:92vh;padding:1.6rem 1.1rem calc(1.4rem + env(safe-area-inset-bottom,0px));border-radius:24px 24px 0 0}.order-card h2{padding:0 2rem;font-size:1.7rem}.order-item-row{grid-template-columns:minmax(0,1fr) 4rem auto;gap:.4rem}.order-item-row select,.order-item-row input{min-width:0;padding:.65rem .5rem;font-size:.9rem}}
+
+
+/* ===== Laptop / desktop balance (>=1001px) ===== */
+@media (min-width:1001px){
+  .home-page .container{padding-left:2.5rem;padding-right:2.5rem}
+
+  /* Header: logo left, nav centred, actions right */
+  .home-page .site-header .container{min-height:84px}
+  .home-page .nav{flex:1;justify-content:center}
+  .home-page .nav .nav-logout{width:auto;margin:0 0 0 .3rem;padding:.7rem 1rem;border-radius:999px;text-align:center;font-size:.9rem;font-weight:600}
+  .home-page .header-actions{min-width:42px;justify-content:flex-end}
+
+  /* Hero: even columns, vertically centred, image fills its column */
+  .home-page .hero{padding:4rem 0 5rem}
+  .home-page .hero-layout{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:5rem;min-height:520px}
+  .home-page .hero h1{max-width:none}
+  .home-page .hero-description{max-width:500px}
+  .home-page .hero-visual{max-width:520px;width:100%;justify-self:end}
+  .home-page .hero-visual>img{height:500px}
+
+  /* Menu: tidy header row and equal-height cards */
+  .home-page .menu-section{padding-top:5.5rem}
+  .home-page .section-intro{align-items:flex-end}
+  .home-page .cards{gap:1.5rem}
+  .home-page .card img{height:220px}
+  .home-page .card h3{min-height:2.5em;display:flex;align-items:flex-start}
+  .home-page .card .dish-desc{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+
+  /* Culture: heading left, 3 tribe cards right, equal heights */
+  .home-page .culture{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:3.5rem;padding:4.5rem 4rem}
+  .home-page .tribes{align-items:stretch}
+  .home-page .tribe{padding:1.35rem 1.2rem}
+
+  /* Contact: info column stays in view while the long form scrolls */
+  .home-page .contact-wrapper{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:4rem;align-items:start}
+  .home-page .contact-info{position:sticky;top:110px;padding:1rem 0}
+  .home-page .reservation-form{padding:2.25rem}
+
+  /* Reservation form: use the width instead of one long column */
+  .home-page .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .home-page .form-row .form-group{min-width:0}
+  .home-page .food-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem 1rem;max-height:260px}
+  .home-page .reservation-form>.btn{display:inline-flex;justify-content:center;align-items:center;margin:.5rem .75rem 0 0;min-width:160px}
+  .home-page .reservation-form>a.btn{margin-top:.5rem!important;border:1px solid #d8c8b5}
+  .home-page #formStatus{margin-top:1rem}
+}
+
+/* Large laptops / desktops (>=1280px): 4 menu columns? keep 3 but wider rhythm */
+@media (min-width:1280px){
+  .home-page .container{max-width:1280px}
+  .home-page .hero-layout{min-height:560px}
+  .home-page .hero-visual>img{height:530px}
+  .home-page .card img{height:235px}
+}
+
+/* Small laptops (1001-1180px): tighten so nothing feels cramped */
+@media (min-width:1001px) and (max-width:1180px){
+  .home-page .site-header .container{gap:1rem}
+  .home-page .nav a{padding:.65rem .65rem;font-size:.86rem}
+  .home-page .hero-layout{gap:3rem}
+  .home-page .hero-visual>img{height:440px}
+  .home-page .culture{padding:3.5rem 2.5rem;gap:2.5rem}
+  .home-page .contact-wrapper{gap:2.5rem}
+}
