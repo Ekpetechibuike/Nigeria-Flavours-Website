@@ -532,3 +532,233 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   .home-page .culture{padding:3.5rem 2.5rem;gap:2.5rem}
   .home-page .contact-wrapper{gap:2.5rem}
 }
+
+/* Shared restaurant auth + profile refresh */
+.auth-page{
+  --auth-ink:#18372f;
+  --auth-deep:#102a23;
+  --auth-paper:#f8f5ee;
+  --auth-card:#fffdf9;
+  --auth-muted:#706f66;
+  --auth-line:#e4dccd;
+  --auth-rust:#c45e30;
+  --auth-rust-deep:#9a4721;
+  color:var(--auth-ink);
+  background:linear-gradient(180deg,#f8f5ee 0%,#f1e9df 100%);
+  font-family:Inter,"Avenir Next",Avenir,"Segoe UI",sans-serif;
+}
+.auth-page a{color:inherit}
+.auth-page .eyebrow{
+  margin:0 0 1rem;
+  color:#9c572b;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.auth-page .auth-shell{
+  display:grid;
+  grid-template-columns:1.04fr .96fr;
+  min-height:100vh;
+  max-width:1400px;
+  margin:0 auto;
+}
+.auth-page .auth-story{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:2.25rem 2.5rem 2.5rem;
+  background:linear-gradient(135deg,#163d34 0%,#1d4a3e 36%,#102a23 100%);
+  color:#f8f5ee;
+}
+.auth-page .auth-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:.7rem;
+  text-decoration:none;
+  color:#fff;
+  font-size:1.05rem;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+.auth-page .auth-brand img{
+  width:38px;
+  height:38px;
+  object-fit:contain;
+}
+.auth-page .auth-brand strong{font-weight:800}
+.auth-page .auth-story-copy{max-width:420px;margin:2rem 0 0}
+.auth-page .auth-story-copy h2{
+  margin:0;
+  color:#fffaf2;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.6rem,4vw,4.1rem);
+  line-height:1.02;
+  letter-spacing:-.055em;
+  font-weight:500;
+}
+.auth-page .auth-story-copy h2 em{color:#f0ba7f;font-style:normal}
+.auth-page .auth-story-copy p:last-child{
+  margin:1.15rem 0 0;
+  color:#d8e2dd;
+  font-size:1rem;
+  line-height:1.8;
+}
+.auth-page .auth-home-link{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  color:#f7dfc0;
+  text-decoration:none;
+  font-weight:600;
+}
+.auth-page .auth-container{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+}
+.auth-page .auth-card{
+  width:min(100%, 460px);
+  padding:2.25rem 2rem 2rem;
+  border:1px solid var(--auth-line);
+  border-radius:28px;
+  background:rgba(255,253,249,.96);
+  box-shadow:0 20px 45px rgba(24,55,47,.08);
+}
+.auth-page .auth-card-eyebrow{margin:0 0 .75rem}
+.auth-page .auth-card h1{
+  margin:0;
+  color:var(--auth-ink);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.2rem,4vw,3rem);
+  line-height:1.08;
+  letter-spacing:-.05em;
+  font-weight:500;
+}
+.auth-page .auth-description{margin:.65rem 0 1.5rem;color:var(--auth-muted);font-size:1rem;line-height:1.7}
+.auth-page .auth-form{display:flex;flex-direction:column;gap:1rem}
+.auth-page .form-group{display:flex;flex-direction:column;gap:.55rem;text-align:left}
+.auth-page .form-group label{font-size:.82rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--auth-ink)}
+.auth-page .form-group input{
+  width:100%;
+  padding:0.92rem 1rem;
+  border:1px solid var(--auth-line);
+  border-radius:14px;
+  background:#fff;
+  color:var(--auth-ink);
+  font:inherit;
+  font-size:1rem;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.auth-page .form-group input::placeholder{color:#8f8b83}
+.auth-page .form-group input:focus{
+  outline:none;
+  border-color:#ad8e72;
+  box-shadow:0 0 0 3px rgba(196,94,48,.12);
+}
+.auth-page .btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--auth-rust),var(--auth-rust-deep));
+  color:#fff;
+  min-height:50px;
+  padding:.9rem 1.35rem;
+  font-weight:700;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 14px 26px rgba(196,94,48,.18);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.auth-page .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+.auth-page .auth-links{margin-top:1.5rem;text-align:center}
+.auth-page .auth-links p{margin:0;color:var(--auth-muted);font-size:.94rem;line-height:1.7}
+.auth-page .auth-links a{color:#b35529;font-weight:700;text-decoration:none}
+.auth-page .auth-links a:hover{text-decoration:underline}
+.auth-page .error-message,
+.auth-page .success-message{
+  display:none;
+  margin:0 0 1rem;
+  padding:.78rem .9rem;
+  border-radius:12px;
+  font-size:.9rem;
+  font-weight:600;
+}
+.auth-page .error-message{background:#fee2e2;color:#991b1b}
+.auth-page .success-message{background:#dcfce7;color:#166534}
+
+
+/* Beat the older #loginForm / #registerForm ID rules so inputs stay cream, not dark */
+.auth-page #loginForm,.auth-page #registerForm{gap:1rem}
+.auth-page #loginForm input,.auth-page #registerForm input{
+  min-height:50px;padding:.92rem 1rem;border:1px solid var(--auth-line);border-radius:14px;
+  background:#fff;color:var(--auth-ink);font-size:1rem}
+.auth-page #loginForm input:focus,.auth-page #registerForm input:focus{
+  outline:none;border-color:#ad8e72;box-shadow:0 0 0 3px rgba(196,94,48,.12)}
+.auth-page #loginForm .btn,.auth-page #registerForm .btn{
+  width:100%;margin-top:.35rem;border:0;font-size:1rem;font-weight:700;
+  background:linear-gradient(135deg,var(--auth-rust),var(--auth-rust-deep));border-radius:999px;color:#fff}
+.auth-page .auth-brand,.auth-page .auth-home-link{color:#fff}
+.auth-page .auth-home-link{color:#f7dfc0}
+.auth-page :focus-visible{outline:3px solid #d98a53;outline-offset:3px}
+
+/* Laptop balance: story panel stays put, card stays centred */
+@media (min-width:901px){
+  .auth-page .auth-shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .auth-page .auth-story{position:sticky;top:0;height:100vh;padding:2.5rem 3.5rem 2.75rem}
+  .auth-page .auth-story-copy{margin:0;max-width:460px}
+  .auth-page .auth-container{padding:3rem 3.5rem}
+  .auth-page .auth-card{width:min(100%,480px);padding:2.5rem 2.25rem 2.25rem}
+}
+@media (min-width:901px) and (max-height:760px){
+  .auth-page .auth-story{padding-top:1.75rem;padding-bottom:1.75rem}
+  .auth-page .auth-story-copy h2{font-size:clamp(2.3rem,3.4vw,3.2rem)}
+  .auth-page .auth-container{padding-top:1.5rem;padding-bottom:1.5rem}
+  .auth-page .auth-card{padding:1.9rem 2rem 1.75rem}
+  .auth-page .auth-description{margin-bottom:1.1rem}
+  .auth-page .auth-form,.auth-page #loginForm,.auth-page #registerForm{gap:.8rem}
+  .auth-page .form-group input,.auth-page #loginForm input,.auth-page #registerForm input{min-height:46px;padding:.75rem .95rem}
+}
+@media (min-width:1400px){
+  .auth-page .auth-shell{max-width:1500px}
+}
+
+@media (max-width:900px){
+  .auth-page .auth-shell{grid-template-columns:1fr}
+  .auth-page .auth-story{min-height:280px;padding:2rem 1.5rem 1.7rem}
+  .auth-page .auth-story-copy{margin-top:1.2rem}
+}
+@media (max-width:600px){
+  .auth-page .auth-container{padding:1.15rem .9rem 2rem}
+  .auth-page .auth-card{padding:1.4rem 1.1rem;border-radius:22px}
+  .auth-page .auth-story{padding:1.4rem 1.1rem 1.5rem}
+}
+
+
+/* ===== Auth polish (from rendered check) ===== */
+/* remove the extra margin inherited from the generic .form-group rule */
+.auth-page .form-group{margin-bottom:0}
+/* readable eyebrow on the dark green story panel */
+.auth-page .auth-story .eyebrow{color:#f0ba7f}
+.auth-page .auth-brand strong{font-weight:800}
+
+/* Laptop: register form uses two columns so it fits without scrolling */
+@media (min-width:901px){
+  .register-page .auth-card{width:min(100%,600px)}
+  .register-page .auth-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.1rem}
+  .register-page .auth-form .form-group{min-width:0}
+  .register-page .auth-form .form-group:nth-child(3),
+  .register-page .auth-form .btn{grid-column:1 / -1}
+  .register-page #registerForm{gap:1rem 1.1rem}
+  .auth-page .auth-form,.auth-page #loginForm{gap:1.1rem}
+}
+@media (min-width:901px) and (max-height:760px){
+  .register-page .auth-card{padding:1.6rem 2rem 1.4rem}
+  .register-page .auth-card h1{font-size:2.3rem}
+  .register-page .auth-description{margin:.4rem 0 .9rem}
+  .register-page .auth-form,.register-page #registerForm{gap:.75rem 1.1rem}
+  .register-page .auth-links{margin-top:1rem}
+}
