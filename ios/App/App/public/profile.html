@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Profile — Nigeria Flavors</title>
+  <title>My Profile — Nigeria Flavours</title>
   <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="./favicon.png" />
   <link rel="shortcut icon" href="./favicon.ico" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#d96c29" />
+  <meta name="theme-color" content="#f8f5ee" />
   <link rel="stylesheet" href="styles.css" />
   <script src="pwa.js" defer></script>
   <script src="auth.js"></script>
@@ -20,178 +20,151 @@
       }
     })();
   </script>
-  <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
-    .profile-container { width: 100%; max-width: 500px; }
-    .profile-card { background: var(--card-bg); border-radius: 12px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,.1); }
-    .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 1.5rem; border: 4px solid var(--accent); }
-    .profile-field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .profile-field label { font-weight: 500; font-size: 0.95rem; color: var(--text); }
-    .profile-field span { padding: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
-    .profile-name { text-align: center; margin: 1rem 0; }
-    .profile-name h1 { font-size: 1.75rem; color: var(--accent); margin: 0 0 0.5rem; }
-    .profile-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
-
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
-    label.btn { cursor: pointer; }
-
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary { background: var(--muted); color: white; }
-    @media (max-width: 600px) { .profile-actions { flex-direction: column; } }
-  </style>
 </head>
-<body>
-  <div class="profile-container">
+<body class="profile-page">
+  <header class="profile-header">
+    <a class="profile-brand" href="index.html" aria-label="Nigeria Flavours home">
+      <img src="./favicon.png" alt="" />
+      <span>Nigeria <strong>Flavours</strong></span>
+    </a>
+    <a class="profile-back-link" href="index.html">Back to the restaurant <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-page-intro">
+      <p class="eyebrow">Your place at our table</p>
+      <h1>Your profile</h1>
+      <p>Keep your details close and make your next visit feel like coming home.</p>
+    </div>
+
     <div class="profile-card">
-      <img id="profileAvatar" src="assets/images/default-avatar.jpg" alt="Profile Avatar" class="profile-avatar-large">
-      
+      <img id="profileAvatar" src="assets/images/default-avatar.svg" alt="Profile Avatar" class="profile-avatar-large">
+
       <div class="profile-name">
-        <h1 id="profileFullName">Loading...</h1>
+        <h2 id="profileFullName">Loading...</h2>
+        <p>Your Nigeria Flavours account</p>
       </div>
-      
+
       <div class="profile-field">
         <label>Username</label>
         <span id="profileUsername">-</span>
       </div>
-      
+
       <div class="profile-field">
         <label>Email</label>
         <span id="profileEmail">-</span>
       </div>
-      
 
-
-
-      
       <div class="profile-field">
         <label>Phone Number</label>
         <span id="profilePhone">-</span>
       </div>
-      
+
       <div class="profile-field">
         <label>Last Login</label>
         <span id="profileLoginDate">-</span>
       </div>
-      
+
+      <p id="profileStatus" class="profile-status" role="status" aria-live="polite"></p>
 
       <div class="profile-actions">
-        <label for="avatarUpload" class="btn btn-primary">Upload Avatar</label>
-        <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
-        <a href="index.html" class="btn btn-primary">Back to Home</a>
-        <button onclick="logout()" class="btn btn-secondary">Logout</button>
+        <label for="avatarUpload" class="btn">Upload Avatar</label>
+        <input type="file" id="avatarUpload" accept="image/*">
+        <a href="index.html" class="btn">Back to Home</a>
+        <button onclick="logout()" class="btn" type="button">Logout</button>
       </div>
-
     </div>
-  </div>
+  </main>
 
-  <script src="auth.js"></script>
   <script src="app-config.js"></script>
   <script src="script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuth();
-      
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      if (user && user.id) {
-        loadProfile(user);
-      } else {
-        document.body.innerHTML = '<div style="text-align:center;padding:2rem;"><h2>Please log in to view profile</h2><a href="login.html" class="btn">Go to Login</a></div>';
-      }
-    });
+    function setStatus(message, isError) {
+      const el = document.getElementById('profileStatus');
+      el.textContent = message || '';
+      el.classList.toggle('is-error', !!isError);
+    }
+
+    function forceLogin() {
+      authStorage.remove('authToken');
+      authStorage.remove('user');
+      window.location.href = 'login.html';
+    }
 
     function loadProfile(user) {
-      document.getElementById('profileAvatar').src = user.image || 'assets/images/default-avatar.jpg';
+      document.getElementById('profileAvatar').src = getProfileImageUrl(user.image);
 
-  document.getElementById('profileFullName').textContent = user.username || '-';
-  document.getElementById('profileUsername').textContent = user.username || '-';
-  document.getElementById('profileEmail').textContent = user.email || '-';
-  document.getElementById('profilePhone').textContent = user.phone || '-';
+      const fullName = [user.firstName, user.surname].filter(Boolean).join(' ');
+      document.getElementById('profileFullName').textContent = fullName || user.username || '-';
+      document.getElementById('profileUsername').textContent = user.username || '-';
+      document.getElementById('profileEmail').textContent = user.email || '-';
+      document.getElementById('profilePhone').textContent = user.phone || '-';
 
-      
-
-      const loginDate = user.loginDate ? new Date(user.loginDate).toLocaleString('en-US', { 
-        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+      const loginDate = user.loginDate ? new Date(user.loginDate).toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
       }) : '-';
       document.getElementById('profileLoginDate').textContent = loginDate;
     }
 
-    // Avatar upload handler
+    document.addEventListener('DOMContentLoaded', async () => {
+      checkAuth();
+
+      const cached = getCurrentUser();
+      if (!cached || !cached.id) {
+        document.body.innerHTML = '<div style="text-align:center;padding:2rem;"><h2>Please log in to view profile</h2><a href="login.html" class="btn">Go to Login</a></div>';
+        return;
+      }
+      loadProfile(cached);
+
+      // Refresh from the server; an expired or invalid session sends the user back to login.
+      try {
+        const data = await apiRequest('/auth/me', { headers: { Authorization: 'Bearer ' + getAuthToken() } });
+        authStorage.set('user', JSON.stringify(data.user));
+        loadProfile(data.user);
+      } catch (error) {
+        if (error.status === 401) forceLogin();
+      }
+    });
+
+    // Avatar upload
     document.getElementById('avatarUpload').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file || !file.type.startsWith('image/')) {
-        alert('Please select a valid image file');
+      const input = e.target;
+      const file = input.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
+        setStatus('Please choose a JPG, PNG, WebP, GIF or AVIF image.', true);
+        input.value = '';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setStatus('That file is too large. The maximum is 5MB.', true);
+        input.value = '';
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) { // 5MB
-        alert('File too large. Max 5MB');
-        return;
-      }
-
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const token = localStorage.getItem('authToken');
-      const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000/api'
-        : '/api';
-
-      const readFileAsDataUrl = () => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error('Could not read image file'));
-        reader.readAsDataURL(file);
-      });
-
+      setStatus('Uploading…', false);
       try {
         const formData = new FormData();
-        formData.append('avatar', file);
-        formData.append('id', user.id || '');
+        formData.append('avatar', file); // the server takes the user id from the session token
 
-        const response = await fetch(`${API_URL}/auth/profile-upload`, {
+        const data = await apiRequest('/auth/profile-upload', {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
+          headers: { Authorization: 'Bearer ' + getAuthToken() },
           body: formData
         });
 
-        let data = {};
-        const text = await response.text();
-        if (text) {
-          try {
-            data = JSON.parse(text);
-          } catch (parseError) {
-            console.warn('Profile upload returned non-JSON response:', text);
-          }
-        }
-
-        const previewImage = await readFileAsDataUrl();
-
-        if (response.ok && data.user) {
-          user.image = data.user.image || data.imageUrl || previewImage;
-          localStorage.setItem('user', JSON.stringify(user));
-          loadProfile(user);
-          showSuccess('Avatar uploaded successfully!');
-        } else {
-          user.image = previewImage;
-          localStorage.setItem('user', JSON.stringify(user));
-          loadProfile(user);
-          showSuccess('Avatar saved locally. Your profile image is ready to use.');
-        }
-
-        e.target.value = '';
+        authStorage.set('user', JSON.stringify(data.user));
+        loadProfile(data.user);
+        if (typeof updateProfileNav === 'function') updateProfileNav(data.user);
+        setStatus('Profile photo updated.', false);
       } catch (error) {
-        const previewImage = await readFileAsDataUrl();
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        user.image = previewImage;
-        localStorage.setItem('user', JSON.stringify(user));
-        loadProfile(user);
-        showSuccess('Avatar saved locally. Your profile image is ready to use.');
-        console.error('Upload error:', error);
+        if (error.status === 401) return forceLogin();
+        setStatus(error.message || 'Upload failed. Please try again.', true);
+      } finally {
+        input.value = '';
       }
     });
   </script>
-
-
-
 </body>
 </html>
