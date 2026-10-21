@@ -18,8 +18,7 @@ const rootFiles = [
   'service-worker.js',
   'manifest.webmanifest',
   'favicon.ico',
-  'favicon.png',
-  'users.json'
+  'favicon.png'
 ];
 
 function copyFile(relativePath) {
@@ -37,7 +36,7 @@ const assetsSource = path.join(projectRoot, 'assets', 'images');
 const assetsDestination = path.join(webRoot, 'assets', 'images');
 fs.cpSync(assetsSource, assetsDestination, { recursive: true });
 
-const apiBase = process.env.CAPACITOR_API_URL || 'https://restaurant-website-trkn.onrender.com/api';
+const apiBase = process.env.CAPACITOR_API_URL || 'https://nigeria-flavours-website.onrender.com/api';
 fs.writeFileSync(
   path.join(webRoot, 'app-config.js'),
   `window.APP_API_BASE = ${JSON.stringify(apiBase)};\n`,
