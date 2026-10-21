@@ -5,13 +5,16 @@
 
 // ========== AUTH & PROFILE FUNCTIONS ==========
 function checkAuth() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const storedUser = sessionStorage.getItem('user') || localStorage.getItem('user') || '{}';
+  const user = JSON.parse(storedUser);
   const loginNavLink = document.getElementById('loginNavLink');
   const profileNavLink = document.getElementById('profileNavLink');
   const logoutNavBtn = document.getElementById('logoutNavBtn');
   const profileNavInfo = document.getElementById('profileNavInfo');
 
-  if (user && user.id && localStorage.getItem('authToken')) {
+  const authToken = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+
+  if (user && user.id && authToken) {
     updateProfileNav(user);
     if (loginNavLink) loginNavLink.classList.add('hidden');
   } else {
@@ -20,6 +23,18 @@ function checkAuth() {
     if (logoutNavBtn) logoutNavBtn.classList.add('hidden');
     if (loginNavLink) loginNavLink.classList.remove('hidden');
   }
+}
+
+function getProfileImageUrl(image) {
+  if (typeof image !== 'string' || !image) {
+    return 'assets/images/default-avatar.svg';
+  }
+
+  if (image.startsWith('/assets/user-images/') && window.APP_API_BASE) {
+    return new URL(image, window.APP_API_BASE).href;
+  }
+
+  return image;
 }
 
 function updateProfileNav(user) {
@@ -41,7 +56,7 @@ function updateProfileNav(user) {
       profileUsername.textContent = user.username || user.name || 'User';
     }
     if (profileAvatarNav) {
-      profileAvatarNav.src = user.image || 'assets/images/default-avatar.jpg';
+      profileAvatarNav.src = getProfileImageUrl(user.image);
     }
   }
 }
@@ -49,7 +64,9 @@ function updateProfileNav(user) {
 // Logout function - clears auth and redirects to login page
 function logout() {
   try {
-    // Clear ALL auth-related localStorage
+    // Clear ALL auth-related storage
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('registeredUsers');
@@ -114,24 +131,59 @@ function initReservationForm() {
   if (phoneInput && storedUser.phone && !phoneInput.value) {
     phoneInput.value = storedUser.phone;
   }
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(form);
     const statusEl = document.getElementById('formStatus');
+    const name = (formData.get('name') || '').toString().trim();
     const email = (formData.get('email') || '').toString().trim().toLowerCase();
     const phone = (formData.get('phone') || '').toString().trim();
-    
-    // Get selected foods
+    const date = (formData.get('date') || '').toString();
+    const time = (formData.get('time') || '').toString();
+    const guests = parseInt(formData.get('guests'));
+
+    if (!name || !email || !phone || !date || !time || !guests) {
+      if (statusEl) {
+        statusEl.textContent = 'Please complete all required reservation fields.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (statusEl) {
+        statusEl.textContent = 'Please enter a valid email address.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
+    if (!/^[0-9+()\-\s]{7,20}$/.test(phone)) {
+      if (statusEl) {
+        statusEl.textContent = 'Please enter a valid phone number.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
+
     const selectedFoods = [];
     const foodCheckboxes = form.querySelectorAll('input[name="res-foods"]:checked');
-    foodCheckboxes.forEach(cb => {
+    foodCheckboxes.forEach((cb) => {
       selectedFoods.push({
         name: cb.value,
         price: parseInt(cb.dataset.price)
       });
     });
+
+    if (selectedFoods.length === 0) {
+      if (statusEl) {
+        statusEl.textContent = 'Please select at least one dish before submitting your reservation.';
+        statusEl.style.color = '#dc2626';
+      }
+      return;
+    }
 
     const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
     const existingReservation = reservations.find((reservation) => {
@@ -147,18 +199,18 @@ function initReservationForm() {
       }
       return;
     }
-    
+
     const reservation = {
       id: Date.now(),
-      name: formData.get('name'),
+      name,
       email,
       phone,
-      date: formData.get('date'),
-      time: formData.get('time'),
-      guests: parseInt(formData.get('guests')),
-      message: formData.get('message'),
+      date,
+      time,
+      guests,
+      message: (formData.get('message') || '').toString().trim(),
       foods: selectedFoods,
-      total: selectedFoods.reduce((sum, f) => sum + f.price, 0),
+      total: selectedFoods.reduce((sum, food) => sum + (food.price || 0), 0),
       createdAt: new Date().toISOString()
     };
 
@@ -193,17 +245,17 @@ function initReservationForm() {
       localStorage.setItem('reservationPending', JSON.stringify(reservation));
 
       if (statusEl) {
-        statusEl.textContent = error.message || 'You have already reserved.';
+        statusEl.textContent = error.message || 'Reservation could not be saved. Please try again.';
         statusEl.style.color = '#dc2626';
       }
       return;
     }
-    
+
     form.reset();
     if (phoneInput && storedUser.phone) {
       phoneInput.value = storedUser.phone;
     }
-    
+
     setTimeout(() => {
       if (statusEl) statusEl.textContent = '';
     }, 5000);
@@ -487,7 +539,7 @@ function initNavToggle() {
 
 // ========== DOM READY ==========
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Nigeria Flavors - Static ready!');
+  console.log('Nigeria Flavours - Static ready!');
   
   // Initialize all components
   checkAuth();
@@ -503,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function() {
     username: 'chibuike',
     name: 'EKPETE Chibuike',
     email: 'Ekpetechibuike@icloud.com',
-    image: 'assets/images/default-avatar.jpg'
+    image: 'assets/images/default-avatar.svg'
   };
   
   // Auto-login for demo purposes (optional - remove in production)
