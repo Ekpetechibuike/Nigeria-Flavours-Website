@@ -1,6 +1,5 @@
-// Mock authentication module for demonstration purposes
-// In a real application, this would involve API calls to a backend server
-// This mock module allows us to simulate login/logout without a server
+// Authentication module. Login and registration go through the server API
+// (see server/server.js); the server issues a signed session token.
 
 // ========== CENTRALIZED AUTHENTICATION FUNCTIONS ==========
 
@@ -42,21 +41,36 @@ function getAuthStorage() {
 
 const authStorage = getAuthStorage();
 
-async function hashPassword(value) {
-  const text = (value || '').toString();
-  if (!text) return '';
+// ========== API HELPERS ==========
 
-  if (window.crypto && window.crypto.subtle && typeof TextEncoder !== 'undefined') {
-    const encoded = new TextEncoder().encode(text);
-    const buffer = await window.crypto.subtle.digest('SHA-256', encoded);
-    return Array.from(new Uint8Array(buffer)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
-  }
+function getApiBase() {
+  if (window.APP_API_BASE) return String(window.APP_API_BASE).replace(/\/$/, '');
+  const host = window.location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  // When the page is served by the Express server itself (port 5000), use same-origin.
+  if (isLocal && window.location.port !== '5000') return 'http://localhost:5000/api';
+  return '/api';
+}
 
-  let hash = 0;
-  for (let index = 0; index < text.length; index += 1) {
-    hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
+function getAuthToken() {
+  return authStorage.get('authToken') || '';
+}
+
+async function apiRequest(path, options = {}) {
+  let response;
+  try {
+    response = await fetch(getApiBase() + path, options);
+  } catch (error) {
+    throw new Error('Could not reach the server. Please check your connection and try again.');
   }
-  return hash.toString(16);
+  let data = {};
+  try { data = await response.json(); } catch (error) { /* non-JSON body */ }
+  if (!response.ok) {
+    const err = new Error(data.error || 'Something went wrong. Please try again.');
+    err.status = response.status;
+    throw err;
+  }
+  return data;
 }
 
 function validateEmail(email) {
@@ -65,11 +79,6 @@ function validateEmail(email) {
 
 function validatePhone(phone) {
   return /^[0-9+()\-\s]{7,20}$/.test((phone || '').trim());
-}
-
-function getRegisteredUsers() {
-  const users = safeJsonParse(authStorage.get('registeredUsers'), []);
-  return Array.isArray(users) ? users : [];
 }
 
 function setCurrentUser(user, token) {
@@ -137,125 +146,55 @@ window.auth = {
   },
 
   login: async function(username, password) {
-    try {
-      const normalizedInput = (username || '').toString().trim().toLowerCase();
-      const trimmedPassword = (password || '').toString();
+    const identifier = (username || '').toString().trim();
+    const secret = (password || '').toString();
 
-      if (!normalizedInput || !trimmedPassword) {
-        throw new Error('Please enter both username and password');
-      }
-
-      let users = [];
-      try {
-        const response = await fetch('users.json', { cache: 'no-store' });
-        if (response.ok) {
-          users = await response.json();
-        }
-      } catch (error) {
-        console.log('Could not load users.json, using localStorage only');
-      }
-
-      const registeredUsers = getRegisteredUsers();
-      users = [...users, ...registeredUsers];
-
-      const passwordHash = await hashPassword(trimmedPassword);
-
-      const user = users.find((u) => {
-        const storedUsername = (u.username || '').toString().trim().toLowerCase();
-        const storedEmail = (u.email || '').toString().trim().toLowerCase();
-        const storedHash = (u.passwordHash || u.password || '').toString();
-        const matchesHash = storedHash === passwordHash;
-        const matchesLegacy = String(u.password || '') === String(trimmedPassword);
-        return (storedUsername === normalizedInput || storedEmail === normalizedInput) && (matchesHash || matchesLegacy);
-      });
-
-      if (!user) {
-        throw new Error('Invalid username or password');
-      }
-
-      const token = 'sess_' + Date.now() + '_' + Math.random().toString(16).slice(2);
-      setCurrentUser(user, token);
-      window.location.href = 'index.html';
-      return user;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+    if (!identifier || !secret) {
+      throw new Error('Please enter both username and password');
     }
+
+    const data = await apiRequest('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: identifier, password: secret })
+    });
+
+    setCurrentUser(data.user, data.token);
+    window.location.href = 'index.html';
+    return data.user;
   },
 
   register: async function(email, phone, username, password) {
-    try {
-      const trimmedEmail = (email || '').toString().trim();
-      const trimmedPhone = (phone || '').toString().trim();
-      const trimmedUsername = (username || '').toString().trim();
-      const trimmedPassword = (password || '').toString();
+    const trimmedEmail = (email || '').toString().trim();
+    const trimmedPhone = (phone || '').toString().trim();
+    const trimmedUsername = (username || '').toString().trim();
+    const secret = (password || '').toString();
 
-      if (!trimmedEmail || !trimmedPhone || !trimmedUsername || !trimmedPassword) {
-        throw new Error('Please fill in all required fields');
-      }
-
-      if (!validateEmail(trimmedEmail)) {
-        throw new Error('Please provide a valid email address');
-      }
-
-      if (!validatePhone(trimmedPhone)) {
-        throw new Error('Please provide a valid phone number');
-      }
-
-      if (trimmedUsername.length < 3) {
-        throw new Error('Username must be at least 3 characters long');
-      }
-
-      if (trimmedPassword.length < 6) {
-        throw new Error('Password must be at least 6 characters long');
-      }
-
-      let users = [];
-      try {
-        const response = await fetch('users.json', { cache: 'no-store' });
-        if (response.ok) {
-          users = await response.json();
-        }
-      } catch (error) {
-        console.log('Could not load users.json, using localStorage only');
-      }
-
-      const registeredUsers = getRegisteredUsers();
-      users = [...users, ...registeredUsers];
-
-      const normalizedUsername = trimmedUsername.toLowerCase();
-      const normalizedEmail = trimmedEmail.toLowerCase();
-
-      if (users.some((u) => (u.username || '').toString().trim().toLowerCase() === normalizedUsername)) {
-        throw new Error('Username already exists');
-      }
-
-      if (users.some((u) => (u.email || '').toString().trim().toLowerCase() === normalizedEmail)) {
-        throw new Error('Email already exists');
-      }
-
-      const newUser = {
-        id: Date.now(),
-        email: trimmedEmail,
-        username: trimmedUsername,
-        passwordHash: await hashPassword(trimmedPassword),
-        phone: trimmedPhone,
-        loginDate: new Date().toISOString(),
-        image: 'assets/images/default-avatar.svg'
-      };
-
-      const localUsers = getRegisteredUsers();
-      localUsers.push(newUser);
-      localStorage.setItem('registeredUsers', JSON.stringify(localUsers));
-
-      const token = 'auth-token-' + Date.now();
-      setCurrentUser(newUser, token);
-      window.location.href = 'index.html';
-      return newUser;
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
+    if (!trimmedEmail || !trimmedPhone || !trimmedUsername || !secret) {
+      throw new Error('Please fill in all required fields');
     }
+    if (!validateEmail(trimmedEmail)) {
+      throw new Error('Please provide a valid email address');
+    }
+    if (!validatePhone(trimmedPhone)) {
+      throw new Error('Please provide a valid phone number');
+    }
+    if (trimmedUsername.length < 3) {
+      throw new Error('Username must be at least 3 characters long');
+    }
+    if (secret.length < 6) {
+      throw new Error('Password must be at least 6 characters long');
+    }
+
+    const data = await apiRequest('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmedEmail, phone: trimmedPhone, username: trimmedUsername, password: secret })
+    });
+
+    setCurrentUser(data.user, data.token);
+    window.location.href = 'index.html';
+    return data.user;
   },
 
   logout: function() {
