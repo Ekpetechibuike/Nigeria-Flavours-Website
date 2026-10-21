@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nigeria-flavors-v1';
+const CACHE_NAME = 'nigeria-flavours-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -38,6 +38,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  // Never cache API calls (they can contain private data) or other sites' files.
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   event.respondWith(
     fetch(event.request)
