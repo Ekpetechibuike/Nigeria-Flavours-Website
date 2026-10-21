@@ -856,3 +856,5 @@ fieldset legend{font-weight:500;color:var(--text);margin-bottom:0.75rem;padding:
   .profile-page .profile-actions{flex-direction:column}
   .profile-page .profile-actions .btn{width:100%}
 }
+.profile-page .profile-status{min-height:1.4em;margin:1.25rem 0 0;text-align:center;font-size:.92rem;font-weight:600;color:#166534}
+.profile-page .profile-status.is-error{color:#991b1b}
