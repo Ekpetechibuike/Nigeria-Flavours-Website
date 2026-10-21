@@ -1,0 +1,12 @@
+Run these once from your project folder AFTER copying these files over your repo.
+They stop git from tracking private/generated files (the files stay on your disk).
+
+git rm -r --cached users.json server/users.json orders.json www assets/user-images ios/App/App/public ios/App/App/capacitor.config.json ios/App/App/config.xml
+git rm server/README.md
+npm install
+npm run security-check
+git add -A
+git commit -m "Secure auth, lock down data, fix profile page, cleanup"
+git push
+
+Then on Render set: NODE_ENV=production, SESSION_SECRET, ADMIN_KEY, and (with a Disk attached) DATA_DIR.
