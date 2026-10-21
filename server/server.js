@@ -211,6 +211,21 @@ const clean = (value, max = 200) => String(value == null ? '' : value).trim().sl
 const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && v.length <= 254;
 const validPhone = (v) => /^[0-9+()\-\s]{7,20}$/.test(v);
 
+// Photos uploaded before DATA_DIR existed lived in <repo>/assets/user-images.
+const LEGACY_UPLOAD_DIR = path.join(ROOT, 'assets', 'user-images');
+
+// If a user's saved photo file no longer exists (e.g. wiped by a redeploy),
+// return the default avatar instead of a link that would show a broken image.
+function avatarFor(u) {
+  const fallback = 'assets/images/default-avatar.svg';
+  const image = u.image;
+  if (typeof image !== 'string' || !image) return fallback;
+  if (!image.startsWith('/assets/user-images/')) return image;
+  const name = path.basename(image);
+  const found = fs.existsSync(path.join(UPLOAD_DIR, name)) || fs.existsSync(path.join(LEGACY_UPLOAD_DIR, name));
+  return found ? image : fallback;
+}
+
 function publicUser(u) {
   return {
     id: u.id,
@@ -220,7 +235,7 @@ function publicUser(u) {
     surname: u.surname || '',
     phone: u.phone || '',
     loginDate: u.loginDate,
-    image: u.image || 'assets/images/default-avatar.svg'
+    image: avatarFor(u)
   };
 }
 
@@ -303,6 +318,7 @@ app.get('/', (req, res) => res.sendFile(path.join(ROOT, 'login.html')));
 
 // Avatars (stored in UPLOAD_DIR, possibly outside the repo)
 app.use('/assets/user-images', express.static(UPLOAD_DIR, { index: false, dotfiles: 'deny' }));
+app.use('/assets/user-images', express.static(LEGACY_UPLOAD_DIR, { index: false, dotfiles: 'deny' }));
 
 app.use((req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next();
@@ -384,7 +400,7 @@ function saveAvatar(req, res, fields) {
   }
 
   writeUsers(users);
-  return res.json({ user: publicUser(users[idx]), imageUrl: users[idx].image });
+  return res.json({ user: publicUser(users[idx]), imageUrl: avatarFor(users[idx]) });
 }
 
 // ---------------------------------------------------------------------------
