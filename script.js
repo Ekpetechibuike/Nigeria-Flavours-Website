@@ -539,7 +539,7 @@ function initNavToggle() {
 
 // ========== DOM READY ==========
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Nigeria Flavors - Static ready!');
+  console.log('Nigeria Flavours - Static ready!');
   
   // Initialize all components
   checkAuth();
