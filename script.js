@@ -4,8 +4,17 @@
  */
 
 // ========== AUTH & PROFILE FUNCTIONS ==========
+function safeParse(value, fallback) {
+  try {
+    const parsed = JSON.parse(value);
+    return parsed ?? fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
 function checkAuth() {
-  const storedUser = sessionStorage.getItem('user') || localStorage.getItem('user') || '{}';
+ const storedUser = safeParse(localStorage.getItem('user') || '{}', {});
   const user = JSON.parse(storedUser);
   const loginNavLink = document.getElementById('loginNavLink');
   const profileNavLink = document.getElementById('profileNavLink');
