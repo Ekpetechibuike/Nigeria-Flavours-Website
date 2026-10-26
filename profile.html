@@ -154,8 +154,10 @@
           body: formData
         });
 
-        authStorage.set('user', JSON.stringify(data.user));
-        loadProfile(data.user);
+       const user = data && (data.user || (data.id ? data : null));
+        if (!user) throw new Error('Unexpected response from /auth/me');
+          authStorage.set('user', JSON.stringify(user));
+          loadProfile(user);
         if (typeof updateProfileNav === 'function') updateProfileNav(data.user);
         setStatus('Profile photo updated.', false);
       } catch (error) {
