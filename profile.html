@@ -154,17 +154,29 @@
           body: formData
         });
 
-       const user = data && (data.user || (data.id ? data : null));
-        if (!user) throw new Error('Unexpected response from /auth/me');
-          authStorage.set('user', JSON.stringify(user));
-          loadProfile(user);
-        if (typeof updateProfileNav === 'function') updateProfileNav(data.user);
+        const user = data && (data.user || (data.id ? data : null));
+        if (!user) throw new Error('Upload finished but the server returned no profile data');
+        authStorage.set('user', JSON.stringify(user));
+        loadProfile(user);
+        if (typeof updateProfileNav === 'function') updateProfileNav(user);
         setStatus('Profile photo updated.', false);
       } catch (error) {
         if (error.status === 401) return forceLogin();
         setStatus(error.message || 'Upload failed. Please try again.', true);
       } finally {
         input.value = '';
+      }
+    });
+
+    // TEMPORARY DEBUG - delete this block after you send me the result
+    window.addEventListener('load', async () => {
+      const t = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+      const el = document.getElementById('profileStatus');
+      try {
+        const r = await fetch('/api/auth/me', { headers: { Authorization: 'Bearer ' + t } });
+        el.textContent = 'DEBUG /auth/me: ' + r.status + ' ' + (await r.text()).slice(0, 300);
+      } catch (e) {
+        el.textContent = 'DEBUG failed: ' + e.message;
       }
     });
   </script>
