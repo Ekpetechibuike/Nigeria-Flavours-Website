@@ -22,6 +22,7 @@ function getAuthStorage() {
         return (session && session.getItem(key)) ?? (local && local.getItem(key));
       },
       set(key, value) {
+        if (typeof value !== 'string') return;
         if (session) session.setItem(key, value);
         if (local) local.removeItem(key);
       },
