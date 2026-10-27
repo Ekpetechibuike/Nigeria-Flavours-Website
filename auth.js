@@ -90,19 +90,22 @@ function setCurrentUser(user, token) {
   }
 }
 
+
 // Check if user is currently authenticated
 function isAuthenticated() {
   const token = authStorage.get('authToken');
-  const user = authStorage.get('user');
-  return !!(token && user);
+  return !!(token && getCurrentUser());
 }
 
 // Get the logged-in user object
 function getCurrentUser() {
-  const userStr = authStorage.get('user');
-  return userStr ? JSON.parse(userStr) : null;
+  const user = safeJsonParse(authStorage.get('user'), null);
+  if (!user || typeof user !== 'object') {
+    authStorage.remove('user'); // clear bad values like "undefined"
+    return null;
+  }
+  return user;
 }
-
 // Redirect to login page if not authenticated
 // Use this on protected pages (index.html, profile.html, etc.)
 function requireAuth() {
