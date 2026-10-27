@@ -64,10 +64,17 @@ async function apiRequest(path, options = {}) {
   } catch (error) {
     throw new Error('Could not reach the server. Please check your connection and try again.');
   }
-  let data = {};
+
+  let data = null;
   try { data = await response.json(); } catch (error) { /* non-JSON body */ }
+
   if (!response.ok) {
-    const err = new Error(data.error || 'Something went wrong. Please try again.');
+    const err = new Error((data && data.error) || 'Server error (' + response.status + '). Please try again.');
+    err.status = response.status;
+    throw err;
+  }
+  if (data === null) {
+    const err = new Error('The server sent an unexpected reply. It may still be starting up, so please try again in a minute.');
     err.status = response.status;
     throw err;
   }
@@ -90,6 +97,7 @@ function setCurrentUser(user, token) {
     updateProfileNav(user);
   }
 }
+
 // Check if user is currently authenticated
 function isAuthenticated() {
   const token = authStorage.get('authToken');
@@ -105,6 +113,7 @@ function getCurrentUser() {
   }
   return user;
 }
+
 // Redirect to login page if not authenticated
 // Use this on protected pages (index.html, profile.html, etc.)
 function requireAuth() {
@@ -115,7 +124,7 @@ function requireAuth() {
   return true;
 }
 
-// Redirect to home page if already authenticated  
+// Redirect to home page if already authenticated
 // Use this on login.html and register.html
 function checkGuest() {
   if (isAuthenticated()) {
@@ -266,14 +275,4 @@ function showSuccess(message, container = document) {
   setTimeout(() => {
     if (successDiv) successDiv.style.display = 'none';
   }, 3000);
-}
-
-function showSuccess(message, container = document) {
-  const successDiv = container.getElementById('successMessage');
-  if (successDiv) {
-    successDiv.textContent = message;
-    successDiv.style.display = 'block';
-  } else {
-    alert(message);
-  }
 }
