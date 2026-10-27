@@ -22,7 +22,7 @@ function getAuthStorage() {
         return (session && session.getItem(key)) ?? (local && local.getItem(key));
       },
       set(key, value) {
-        if (typeof value !== 'string') return; // CHANGED: never store "undefined"
+        if (typeof value !== 'string') return;
         if (session) session.setItem(key, value);
         if (local) local.removeItem(key);
       },
@@ -83,25 +83,28 @@ function validatePhone(phone) {
 }
 
 function setCurrentUser(user, token) {
+  if (!user || !token) throw new Error('Login response was incomplete. Please try again.');
   authStorage.set('authToken', token);
   authStorage.set('user', JSON.stringify(user));
   if (typeof updateProfileNav === 'function') {
     updateProfileNav(user);
   }
 }
-
 // Check if user is currently authenticated
 function isAuthenticated() {
   const token = authStorage.get('authToken');
-  const user = authStorage.get('user');
-  return !!(token && user);
+  return !!(token && getCurrentUser());
 }
 
 // Get the logged-in user object
-function getCurrentUser() { // CHANGED: safe parse, never throws
-  return safeJsonParse(authStorage.get('user'), null);
+function getCurrentUser() {
+  const user = safeJsonParse(authStorage.get('user'), null);
+  if (!user || typeof user !== 'object') {
+    authStorage.remove('user'); // clear bad values like "undefined"
+    return null;
+  }
+  return user;
 }
-
 // Redirect to login page if not authenticated
 // Use this on protected pages (index.html, profile.html, etc.)
 function requireAuth() {
@@ -263,4 +266,14 @@ function showSuccess(message, container = document) {
   setTimeout(() => {
     if (successDiv) successDiv.style.display = 'none';
   }, 3000);
+}
+
+function showSuccess(message, container = document) {
+  const successDiv = container.getElementById('successMessage');
+  if (successDiv) {
+    successDiv.textContent = message;
+    successDiv.style.display = 'block';
+  } else {
+    alert(message);
+  }
 }
