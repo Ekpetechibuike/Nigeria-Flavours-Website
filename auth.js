@@ -83,14 +83,13 @@ function validatePhone(phone) {
 }
 
 function setCurrentUser(user, token) {
+  if (!user || !token) throw new Error('Login response was incomplete. Please try again.');
   authStorage.set('authToken', token);
   authStorage.set('user', JSON.stringify(user));
   if (typeof updateProfileNav === 'function') {
     updateProfileNav(user);
   }
 }
-
-
 // Check if user is currently authenticated
 function isAuthenticated() {
   const token = authStorage.get('authToken');
