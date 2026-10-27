@@ -22,6 +22,7 @@ function getAuthStorage() {
         return (session && session.getItem(key)) ?? (local && local.getItem(key));
       },
       set(key, value) {
+        if (typeof value !== 'string') return; // CHANGED: never store "undefined"
         if (session) session.setItem(key, value);
         if (local) local.removeItem(key);
       },
@@ -97,9 +98,8 @@ function isAuthenticated() {
 }
 
 // Get the logged-in user object
-function getCurrentUser() {
-  const userStr = authStorage.get('user');
-  return userStr ? JSON.parse(userStr) : null;
+function getCurrentUser() { // CHANGED: safe parse, never throws
+  return safeJsonParse(authStorage.get('user'), null);
 }
 
 // Redirect to login page if not authenticated
@@ -263,14 +263,4 @@ function showSuccess(message, container = document) {
   setTimeout(() => {
     if (successDiv) successDiv.style.display = 'none';
   }, 3000);
-}
-
-function showSuccess(message, container = document) {
-  const successDiv = container.getElementById('successMessage');
-  if (successDiv) {
-    successDiv.textContent = message;
-    successDiv.style.display = 'block';
-  } else {
-    alert(message);
-  }
 }
