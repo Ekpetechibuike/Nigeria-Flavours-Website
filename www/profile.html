@@ -167,18 +167,6 @@
         input.value = '';
       }
     });
-
-    // TEMPORARY DEBUG - delete this block after you send me the result
-    window.addEventListener('load', async () => {
-      const t = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
-      const el = document.getElementById('profileStatus');
-      try {
-        const r = await fetch('/api/auth/me', { headers: { Authorization: 'Bearer ' + t } });
-        el.textContent = 'DEBUG /auth/me: ' + r.status + ' ' + (await r.text()).slice(0, 300);
-      } catch (e) {
-        el.textContent = 'DEBUG failed: ' + e.message;
-      }
-    });
   </script>
 </body>
 </html>
