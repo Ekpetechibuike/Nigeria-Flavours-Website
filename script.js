@@ -14,8 +14,8 @@ function safeParse(value, fallback) {
 }
 
 function checkAuth() {
- const storedUser = safeParse(localStorage.getItem('user') || '{}', {});
-  const user = JSON.parse(storedUser);
+  const storedUser = sessionStorage.getItem('user') || localStorage.getItem('user') || '{}';
+  const user = safeParse(storedUser, {});
   const loginNavLink = document.getElementById('loginNavLink');
   const profileNavLink = document.getElementById('profileNavLink');
   const logoutNavBtn = document.getElementById('logoutNavBtn');
